@@ -96,6 +96,21 @@ const css = `{css}`;
 
 inject_theme()
 
+# ---------- Auto-scroll ONLY the last assistant bubble ----------
+def scroll_to_last_assistant():
+    html("""
+    <script>
+    (function(){
+      const d = window.parent?.document || document;
+      // หาเฉพาะคอนเทนเนอร์ที่เราห่อไว้ของผู้ช่วย
+      const as = d.querySelectorAll('[data-fit-role="assistant"]');
+      if (as && as.length){
+        as[as.length-1].scrollIntoView({behavior:'smooth', block:'end'});
+      }
+    })();
+    </script>
+    """, height=0)
+
 # ---------- Data check ----------
 @st.cache_data
 def load_faq():
@@ -192,14 +207,19 @@ if user_msg:
     if qn in GREETINGS or len(qn) < 3:
         reply = "Hi! Ask me about FIT (e.g., “What is FWCV?” or “When do I enter covers?”)."
         st.session_state.history.append(("assistant", reply))
-        with st.chat_message("assistant"): st.markdown(reply)
+        with st.chat_message("assistant"):
+            # ✨ ห่อด้วย data-fit-role="assistant" เพื่อให้ scroll เจอ
+            st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
+        scroll_to_last_assistant()
         st.stop()
 
     # Daily budget
     if tokens_today_from_log(LOG_QNA) > DAILY_TOKEN_BUDGET:
         reply = "Daily AI budget is reached. Please try again tomorrow."
         st.session_state.history.append(("assistant", reply))
-        with st.chat_message("assistant"): st.markdown(reply)
+        with st.chat_message("assistant"):
+            st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
+        scroll_to_last_assistant()
         st.stop()
 
     # Cache
@@ -207,7 +227,9 @@ if user_msg:
     if cached:
         reply = cached
         st.session_state.history.append(("assistant", reply))
-        with st.chat_message("assistant"): st.markdown(reply)
+        with st.chat_message("assistant"):
+            st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
+        scroll_to_last_assistant()
         st.stop()
 
     # --- Retrieve ---
@@ -230,31 +252,36 @@ if user_msg:
         log_unanswered(user_msg, hits or [])
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
-            st.markdown(reply)
+            st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
+        scroll_to_last_assistant()
         st.stop()
 
-    # --- LLM ---  ✅ เพิ่ม “กำลังคิด…” แล้วแทนที่ด้วยคำตอบ
+    # --- LLM ---  ✅ แสดง “กำลังคิด…” และเลื่อนเฉพาะบับเบิลผู้ช่วย
     with st.chat_message("assistant"):
         thinking = st.empty()
         thinking.markdown(
             '''
-            <div class="typing" aria-live="polite" aria-label="Assistant is typing">
-              <span class="dots">
-                <i class="dot"></i><i class="dot"></i><i class="dot"></i>
-              </span>
-              <span class="txt">Thinking…</span>
+            <div data-fit-role="assistant">
+              <div class="typing" aria-live="polite" aria-label="Assistant is typing">
+                <span class="dots">
+                  <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+                </span>
+                <span class="txt">Thinking…</span>
+              </div>
             </div>
             ''',
             unsafe_allow_html=True
         )
+        scroll_to_last_assistant()
 
-    result = answer_with_llm(user_msg, hits)
-    reply = result.get("text", "")
-    usage = result.get("usage", {})
-    latency = result.get("latency", 0.0)
+        result = answer_with_llm(user_msg, hits)
+        reply = result.get("text", "")
+        usage = result.get("usage", {})
+        latency = result.get("latency", 0.0)
 
-    # แทนที่บับเบิลเดิมด้วยคำตอบ (ไม่สร้างบับเบิลใหม่)
-    thinking.markdown(reply)
+        # แทนที่บับเบิลเดิมด้วยคำตอบ (ยังห่อด้วย data-fit-role="assistant")
+        thinking.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
+        scroll_to_last_assistant()
 
     # Error debug (optional)
     if result.get("error"):
@@ -279,5 +306,58 @@ if user_msg:
     if reply and "not sure" not in reply.lower():
         st.session_state.qa_cache[qn] = reply
 
-    # บันทึกลง history เพื่อให้รอบถัดไปรันแล้วมีข้อความนี้แสดงทันที
+    # บันทึกลง history (เก็บเฉพาะข้อความ ไม่ต้องห่อ div ตรงนี้)
     st.session_state.history.append(("assistant", reply))
+
+# ---------- Floating scroll-to-latest button ----------
+html("""
+<style>
+#scroll-to-latest {
+  position: fixed;
+  right: 24px;
+  bottom: 90px;
+  z-index: 9997;
+  background: var(--btn-bg, #A6005A);
+  color: var(--accent, #F7F3CE);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 4px 12px #0004;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+#scroll-to-latest:hover {
+  background: var(--btn-hover, #C20068);
+  box-shadow: 0 0 10px #fff4;
+}
+</style>
+
+<button id="scroll-to-latest" title="Scroll to latest reply">⬇ Latest</button>
+
+<script>
+(function(){
+  const btn = document.getElementById('scroll-to-latest');
+  const d = window.parent?.document || document;
+  btn.onclick = () => {
+    const as = d.querySelectorAll('[data-fit-role="assistant"]');
+    if(as && as.length){
+      as[as.length-1].scrollIntoView({behavior:'smooth', block:'end'});
+    }
+  };
+
+  // ซ่อน/แสดงปุ่มตามตำแหน่ง scroll
+  const root = d.scrollingElement || d.documentElement;
+  const toggleBtn = () => {
+    if(root.scrollTop < root.scrollHeight - window.innerHeight - 400){
+      btn.style.display = 'block';
+    } else {
+      btn.style.display = 'none';
+    }
+  };
+  window.addEventListener('scroll', toggleBtn, true);
+  toggleBtn();
+})();
+</script>
+""", height=0)
