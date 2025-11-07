@@ -57,6 +57,21 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
   border:0!important; border-radius:12px!important; font-weight:600!important;
   font-family:'Poppins',sans-serif; padding:.6rem 1rem!important; transition:background .2s, box-shadow .2s;
 }
+/* typing dots */
+.typing{ display:inline-flex; align-items:center; gap:8px; line-height:1 }
+.typing .dots{ display:inline-flex; gap:6px }
+.typing .dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent); opacity:.3;
+  display:inline-block; animation:typingBlink 1s infinite ease-in-out
+}
+.typing .dot:nth-child(2){ animation-delay:.15s }
+.typing .dot:nth-child(3){ animation-delay:.30s }
+.typing .txt{ opacity:.9; font-weight:600 }
+@keyframes typingBlink{
+  0%,100%{ opacity:.25; transform: translateY(0) }
+  50%{    opacity:1;   transform: translateY(-3px) }
+}
 [data-testid="stChatInput"] button:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E055; }
 button[kind="primary"]{ background:var(--btn-bg)!important; color:var(--accent)!important; border:0!important; border-radius:12px!important; font-weight:600!important; }
 button[kind="primary"]:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E044; }
@@ -218,11 +233,28 @@ if user_msg:
             st.markdown(reply)
         st.stop()
 
-    # --- LLM ---
+    # --- LLM ---  ✅ เพิ่ม “กำลังคิด…” แล้วแทนที่ด้วยคำตอบ
+    with st.chat_message("assistant"):
+        thinking = st.empty()
+        thinking.markdown(
+            '''
+            <div class="typing" aria-live="polite" aria-label="Assistant is typing">
+              <span class="dots">
+                <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+              </span>
+              <span class="txt">Thinking…</span>
+            </div>
+            ''',
+            unsafe_allow_html=True
+        )
+
     result = answer_with_llm(user_msg, hits)
-    reply = result["text"]
+    reply = result.get("text", "")
     usage = result.get("usage", {})
     latency = result.get("latency", 0.0)
+
+    # แทนที่บับเบิลเดิมด้วยคำตอบ (ไม่สร้างบับเบิลใหม่)
+    thinking.markdown(reply)
 
     # Error debug (optional)
     if result.get("error"):
@@ -247,7 +279,5 @@ if user_msg:
     if reply and "not sure" not in reply.lower():
         st.session_state.qa_cache[qn] = reply
 
-    # Render
+    # บันทึกลง history เพื่อให้รอบถัดไปรันแล้วมีข้อความนี้แสดงทันที
     st.session_state.history.append(("assistant", reply))
-    with st.chat_message("assistant"):
-        st.markdown(reply)
