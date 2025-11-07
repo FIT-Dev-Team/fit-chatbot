@@ -6,8 +6,20 @@ import openai
 
 load_dotenv()
 
-# --- Config from .env ---
-OPENAI_API_KEY     = os.getenv("OPENAI_API_KEY", "")
+# ลองอ่านจาก env ก่อน
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
+# ถ้าเป็น Streamlit Cloud ให้ลองอ่านจาก secrets ด้วย (ถ้ามี)
+if not OPENAI_API_KEY:
+    try:
+        import streamlit as st  # จะสำเร็จเฉพาะตอนรันใน Streamlit
+        OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", OPENAI_API_KEY)
+    except Exception:
+        pass
+
+if not OPENAI_API_KEY:
+    raise RuntimeError("OPENAI_API_KEY not found. Put it in .env OR Streamlit secrets.")
+
 MODEL              = os.getenv("OPENAI_MODEL") or os.getenv("MODEL", "gpt-4o-mini")
 SMART_MODEL        = os.getenv("OPENAI_SMART_MODEL") or os.getenv("SMART_MODEL", "gpt-4o")
 MAX_ANSWER_TOKENS  = int(os.getenv("MAX_ANSWER_TOKENS", 320))
@@ -15,9 +27,6 @@ MAX_CTX_CHARS      = int(os.getenv("MAX_CTX_CHARS", 4000))
 ALLOW_ESCALATE     = os.getenv("ALLOW_ESCALATE", "1") == "1"
 REQUEST_TIMEOUT_S  = float(os.getenv("REQUEST_TIMEOUT_S", 30))
 USER_TAG           = os.getenv("USER_TAG", "fit-assistant")
-
-if not OPENAI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY not found. Put it in .env (OPENAI_API_KEY=sk-...)")
 
 openai.api_key = OPENAI_API_KEY
 
@@ -31,7 +40,6 @@ def _clean(s: str) -> str:
     return " ".join((s or "").split())
 
 def _clamp_context(chunks: List[Dict]) -> Tuple[str, int]:
-    """Return (context_text, count_used). Sort by score desc; cap by MAX_CTX_CHARS."""
     if not chunks:
         return "NO_CONTEXT", 0
     acc, total, used = [], 0, 0
@@ -45,7 +53,6 @@ def _clamp_context(chunks: List[Dict]) -> Tuple[str, int]:
     return ("".join(acc) if acc else "NO_CONTEXT"), used
 
 def _usage_to_dict(u) -> Dict[str, int]:
-    """Normalize OpenAI usage object (pydantic or dict) -> plain dict."""
     try:
         if u is None:
             return {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
@@ -54,9 +61,8 @@ def _usage_to_dict(u) -> Dict[str, int]:
             ct = int(u.get("completion_tokens", u.get("output_tokens", 0)) or 0)
             tt = int(u.get("total_tokens", pt + ct) or (pt + ct))
             return {"prompt_tokens": pt, "completion_tokens": ct, "total_tokens": tt}
-        if hasattr(u, "model_dump"):  # pydantic style
+        if hasattr(u, "model_dump"):
             return _usage_to_dict(u.model_dump())
-        # attribute style
         pt = int(getattr(u, "prompt_tokens", getattr(u, "input_tokens", 0)) or 0)
         ct = int(getattr(u, "completion_tokens", getattr(u, "output_tokens", 0)) or 0)
         tt = int(getattr(u, "total_tokens", 0) or (pt + ct))
@@ -65,7 +71,6 @@ def _usage_to_dict(u) -> Dict[str, int]:
         return {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 
 def _call(model: str, user_q: str, ctx: str) -> Dict:
-    """Low-level OpenAI call. Returns text/usage/latency/model_used (+error optional)."""
     messages = [
         {"role": "system", "content": SYSTEM},
         {"role": "user", "content":
@@ -98,21 +103,15 @@ def _call(model: str, user_q: str, ctx: str) -> Dict:
         }
 
 def answer_with_llm(user_q: str, chunks: List[Dict]) -> Dict:
-    """
-    High-level API used by the app.
-    Returns: {'text','usage','latency','model_used','ctx_used','chunks_used', 'error'(opt)}
-    """
     ctx, used = _clamp_context(chunks)
     out = _call(MODEL, user_q, ctx)
 
-    # optional escalation to a smarter model if the cheap one says "not sure"
     top_score = (chunks[0].get("score", 0.0) if chunks else 0.0)
     need_escalate = ALLOW_ESCALATE and ("not sure" in out["text"].lower()) and top_score >= 0.45
 
     if need_escalate and SMART_MODEL and SMART_MODEL != MODEL:
         out2 = _call(SMART_MODEL, user_q, ctx)
         if len(out2["text"]) > len(out["text"]):
-            # merge token usage for transparency
             u1, u2 = out["usage"], out2["usage"]
             out2["usage"] = {
                 "prompt_tokens": u1["prompt_tokens"] + u2["prompt_tokens"],
