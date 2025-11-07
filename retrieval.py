@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 
 INDEX_PATH  = os.getenv("INDEX_PATH", "index")
 COLL_NAME   = os.getenv("COLL_NAME", "fit_faq")
-EMB_MODEL   = os.getenv("EMB_MODEL", "all-MiniLM-L6-v2")
+EMB_MODEL   = os.getenv("EMB_MODEL") or os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
 NORMALIZE   = os.getenv("NORMALIZE_EMB", "1") == "1"
 
 _client   = chromadb.PersistentClient(path=INDEX_PATH)
