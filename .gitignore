@@ -6,7 +6,6 @@
 .DS_Store
 
 # Local data folders
-index/
 logs/
 data/*.csv
 
