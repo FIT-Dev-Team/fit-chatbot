@@ -50,17 +50,26 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
 
 /* ===== Make chat input pill fill the whole row ===== */
 [data-testid="stChatInput"]{ padding:12px 16px !important; }
+
+/* ===== Chat bar (Pill) – ปรับโทนให้กลืนกับพื้นหลัง ===== */
 [data-testid="stChatInput"] > div{
   display:flex !important;
-  gap:10px;
   align-items:center;
+  gap:10px;
   width:100% !important;
+  background:var(--bg-main) !important;
+  border:1px solid #FFD7E033 !important;
+  border-radius:9999px !important;
+  box-shadow:0 4px 14px rgba(0,0,0,.25) !important;
+  padding:8px 10px 8px 16px !important;
+  overflow:hidden !important;
 }
 [data-testid="stChatInput"] > div > :first-child{ flex:1 1 auto !important; min-width:0 }
 [data-testid="stChatInput"] > div > :last-child{ flex:0 0 auto }
 [data-testid="stChatInput"] textarea{
   background:#6A0040!important; color:var(--text-main)!important;
-  border:1px solid #FFD7E066!important; border-radius:8px!important;
+  border: none !important;
+  outline: none !important;
   font-family:'Inter',sans-serif;
   width:100% !important; flex:1 1 auto !important;
 }
