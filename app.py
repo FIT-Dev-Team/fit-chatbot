@@ -6,7 +6,6 @@ from pathlib import Path
 from streamlit.components.v1 import html
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 # RAG & LLM
@@ -27,7 +26,7 @@ LOG_QNA = LOG_DIR / "qna_log.csv"
 LOG_UNK = LOG_DIR / "unanswered.csv"
 SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "fit@lightblueconsulting.com")
 
-# ---------- Theme Injection ----------
+# ---------- Theme Injection (ปรับ input pill ให้เต็มแถว + typing dots) ----------
 def inject_theme():
     css = r"""
 :root{
@@ -48,16 +47,34 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
   box-shadow:0 0 10px #FFD7E033; padding:.8rem 1rem; margin-bottom:.5rem;
 }
 [data-testid="stChatMessage"] .stMarkdown{ color:var(--text-main)!important; }
+
+/* ===== Make chat input pill fill the whole row ===== */
+[data-testid="stChatInput"]{ padding:12px 16px !important; }
+[data-testid="stChatInput"] > div{
+  display:flex !important;
+  gap:10px;
+  align-items:center;
+  width:100% !important;
+}
+[data-testid="stChatInput"] > div > :first-child{ flex:1 1 auto !important; min-width:0 }
+[data-testid="stChatInput"] > div > :last-child{ flex:0 0 auto }
 [data-testid="stChatInput"] textarea{
   background:#6A0040!important; color:var(--text-main)!important;
-  border:1px solid #FFD7E066!important; border-radius:8px!important; font-family:'Inter',sans-serif;
+  border:1px solid #FFD7E066!important; border-radius:8px!important;
+  font-family:'Inter',sans-serif;
+  width:100% !important; flex:1 1 auto !important;
 }
 [data-testid="stChatInput"] button{
   background:var(--btn-bg)!important; color:var(--accent)!important;
   border:0!important; border-radius:12px!important; font-weight:600!important;
-  font-family:'Poppins',sans-serif; padding:.6rem 1rem!important; transition:background .2s, box-shadow .2s;
+  font-family:'Poppins',sans-serif; padding:.6rem 1rem!important;
+  transition:background .2s, box-shadow .2s;
 }
-/* typing dots */
+[data-testid="stChatInput"] button:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E055; }
+button[kind="primary"]{ background:var(--btn-bg)!important; color:var(--accent)!important; border:0!important; border-radius:12px!important; font-weight:600!important; }
+button[kind="primary"]:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E044; }
+
+/* typing dots (สำหรับ Thinking…) */
 .typing{ display:inline-flex; align-items:center; gap:8px; line-height:1 }
 .typing .dots{ display:inline-flex; gap:6px }
 .typing .dot{
@@ -72,10 +89,8 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
   0%,100%{ opacity:.25; transform: translateY(0) }
   50%{    opacity:1;   transform: translateY(-3px) }
 }
-[data-testid="stChatInput"] button:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E055; }
-button[kind="primary"]{ background:var(--btn-bg)!important; color:var(--accent)!important; border:0!important; border-radius:12px!important; font-weight:600!important; }
-button[kind="primary"]:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E044; }
-a,.stMarkdown a{ color:var(--accent)!important; text-decoration:none; font-weight:600; } a:hover{ text-decoration:underline; }
+a,.stMarkdown a{ color:var(--accent)!important; text-decoration:none; font-weight:600; }
+a:hover{ text-decoration:underline; }
 """
     html(f"""
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -94,22 +109,152 @@ const css = `{css}`;
 </script>
 """, height=0)
 
-inject_theme()
+# ---------- Floating button: Scroll-to-last-assistant (inject ไปที่ parent) ----------
+def inject_scroll_to_latest_button():
+    html("""
+<script>
+(function(){
+  // ใช้ parent document ได้เมื่อไม่ cross-origin; ถ้าไม่ได้ให้ fallback เป็น document ปัจจุบัน
+  let d = document;
+  try {
+    if (window.parent && window.parent !== window && window.parent.document) {
+      // ทดสอบการอ่าน property ง่าย ๆ ป้องกัน cross-origin error
+      void window.parent.document.nodeType;
+      d = window.parent.document;
+    }
+  } catch (e) { /* fallback = document ปัจจุบัน */ }
+
+  // ===== CSS (ใส่ครั้งเดียว) =====
+  if(!d.querySelector('style[data-fit-scroll-style]')){
+    const st = d.createElement('style');
+    st.setAttribute('data-fit-scroll-style','1');
+    st.textContent = `
+      #fit-scroll-latest{
+        position: fixed;
+        right: 24px;
+        bottom: 120px;
+        z-index: 99999;
+        display: none;
+        width: 44px; height: 44px;
+        border: 2px solid #000;
+        border-radius: 50%;
+        background:#fff; color:#000;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+        cursor: pointer; justify-content: center; align-items: center;
+        transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      #fit-scroll-latest:hover{ transform: translateY(-2px); box-shadow:0 10px 22px rgba(0,0,0,0.45); }
+      #fit-scroll-latest svg{ width: 22px; height: 22px; }
+    `;
+    (d.head || d.body).appendChild(st);
+  }
+
+  // ===== ปุ่ม (ใส่ครั้งเดียว) =====
+  if(!d.getElementById('fit-scroll-latest')){
+    const btn = d.createElement('button');
+    btn.id = 'fit-scroll-latest';
+    btn.title = 'Scroll to latest AI message';
+    btn.setAttribute('aria-label','Scroll to latest AI message');
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14"></path>
+        <path d="m19 12-7 7-7-7"></path>
+      </svg>
+    `;
+    d.body.appendChild(btn);
+  }
+
+  const btn  = d.getElementById('fit-scroll-latest');
+
+  // ✅ เลือกเฉพาะบับเบิลของ "assistant" เท่านั้น
+  function getAssistantNodesSorted(){
+    const nodes = Array.from(d.querySelectorAll('[data-fit-role="assistant"]'))
+      .filter(el => el.offsetParent !== null); // ต้องมองเห็น
+    nodes.sort((a,b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    return nodes;
+  }
+
+  function scrollToLastAssistant(){
+    const nodes = getAssistantNodesSorted();
+    if (nodes.length){
+      // ใช้ scrollIntoView ปล่อยให้เบราเซอร์หา container ที่เลื่อนเอง (กันพลาดเรื่อง container หลายชั้น)
+      nodes[nodes.length-1].scrollIntoView({ behavior: "smooth", block: "end" });
+    } else {
+      const root = d.scrollingElement || d.documentElement || d.body;
+      root.scrollTo({ top: root.scrollHeight, behavior: "smooth" });
+    }
+  }
+
+  // ใช้สภาพจริงของหน้า (documentElement) เพื่อตัดสินว่าอยู่ใกล้ก้นหน้าจอหรือไม่
+  function nearBottom(){
+    const root = d.scrollingElement || d.documentElement || d.body;
+    return ((root.scrollTop || 0) + window.innerHeight + 120) >= root.scrollHeight;
+  }
+
+  function refreshButton(){
+    if (!btn) return;
+    const hasAssistant = getAssistantNodesSorted().length > 0;
+    btn.style.display = (hasAssistant && !nearBottom()) ? "flex" : "none";
+  }
+
+  btn.addEventListener("click", scrollToLastAssistant);
+
+  // ติดตามการเลื่อน/ขนาด/DOM เปลี่ยน เพื่อโชว์/ซ่อนปุ่มอัตโนมัติ
+  window.addEventListener("scroll",  refreshButton, true);
+  window.addEventListener("resize",  refreshButton, true);
+  new MutationObserver(() => setTimeout(refreshButton, 50))
+    .observe(d.body, {childList:true, subtree:true});
+
+  // first paint
+  setTimeout(refreshButton, 0);
+})();
+</script>
+    """, height=0)
 
 # ---------- Auto-scroll ONLY the last assistant bubble ----------
 def scroll_to_last_assistant():
     html("""
     <script>
     (function(){
-      const d = window.parent?.document || document;
-      // หาเฉพาะคอนเทนเนอร์ที่เราห่อไว้ของผู้ช่วย
-      const as = d.querySelectorAll('[data-fit-role="assistant"]');
-      if (as && as.length){
-        as[as.length-1].scrollIntoView({behavior:'smooth', block:'end'});
+      const d = document;
+
+      function getScrollContainer(){
+        const candSel = [
+          '[data-testid="stAppViewContainer"]',
+          '.main',
+          'body',
+          'html'
+        ];
+        for(const sel of candSel){
+          const el = d.querySelector(sel);
+          if(!el) continue;
+          const sh = el.scrollHeight || 0;
+          const ch = el.clientHeight || 0;
+          if(sh - ch > 5) return el;
+        }
+        return d.scrollingElement || d.documentElement || d.body;
+      }
+
+      const container = getScrollContainer();
+      const nodes = Array.from(d.querySelectorAll('[data-fit-role="assistant"]'))
+        .filter(el => el.offsetParent !== null)
+        .sort((a,b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+
+      if(nodes.length){
+        const target = nodes[nodes.length-1];
+        const rect = target.getBoundingClientRect();
+        const crec = container.getBoundingClientRect ? container.getBoundingClientRect() : {top:0};
+        const top  = (rect.top - crec.top) + (container.scrollTop || 0) - 60;
+        container.scrollTo({ top, behavior: "smooth" });
       }
     })();
     </script>
     """, height=0)
+
+# เรียก injects (ต้องเรียกหลังประกาศฟังก์ชัน)
+inject_theme()
+inject_scroll_to_latest_button()
 
 # ---------- Data check ----------
 @st.cache_data
@@ -180,12 +325,15 @@ GREETINGS = {"hi","hello","hey","สวัสดี","หวัดดี"}
 
 # ---------- UI ----------
 st.title("💬 FIT Assistant (FIT AI HELPER)")
-
 st.caption("Grounded answers from your FIT FAQ with [Q#] citations. Low-confidence questions are logged for review.")
 
+# แสดงประวัติ: ห่อเฉพาะ assistant ด้วย data-fit-role ให้ปุ่ม/scroll หาเจอ
 for role, msg in st.session_state.history:
     with st.chat_message(role):
-        st.markdown(msg)
+        if role == "assistant":
+            st.markdown(f'<div data-fit-role="assistant">{msg}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(msg)
 
 user_msg = st.chat_input("Ask something about FIT…")
 
@@ -208,7 +356,6 @@ if user_msg:
         reply = "Hi! Ask me about FIT (e.g., “What is FWCV?” or “When do I enter covers?”)."
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
-            # ✨ ห่อด้วย data-fit-role="assistant" เพื่อให้ scroll เจอ
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
         scroll_to_last_assistant()
         st.stop()
@@ -235,7 +382,7 @@ if user_msg:
     # --- Retrieve ---
     hits = retrieve(user_msg, k=TOP_K, min_sim=MIN_SIM)
 
-    # Retrieval debug (FIXED INDENT)
+    # Retrieval debug
     with st.expander("🔎 Retrieval debug"):
         st.write([
             {"score": round(h["score"], 3),
@@ -256,7 +403,7 @@ if user_msg:
         scroll_to_last_assistant()
         st.stop()
 
-    # --- LLM ---  ✅ แสดง “กำลังคิด…” และเลื่อนเฉพาะบับเบิลผู้ช่วย
+    # --- LLM ---  ✅ “กำลังคิด…” แล้วแทนที่ด้วยคำตอบในบับเบิลเดิม
     with st.chat_message("assistant"):
         thinking = st.empty()
         thinking.markdown(
@@ -275,11 +422,10 @@ if user_msg:
         scroll_to_last_assistant()
 
         result = answer_with_llm(user_msg, hits)
-        reply = result.get("text", "")
-        usage = result.get("usage", {})
+        reply   = result.get("text", "")
+        usage   = result.get("usage", {})
         latency = result.get("latency", 0.0)
 
-        # แทนที่บับเบิลเดิมด้วยคำตอบ (ยังห่อด้วย data-fit-role="assistant")
         thinking.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
         scroll_to_last_assistant()
 
@@ -291,8 +437,10 @@ if user_msg:
     # Spend tracking
     spent = (usage.get("total_tokens")
              or (usage.get("prompt_tokens", 0) + usage.get("completion_tokens", 0)))
-    try: st.session_state.token_spent += int(spent or 0)
-    except: pass
+    try:
+        st.session_state.token_spent += int(spent or 0)
+    except:
+        pass
 
     if st.session_state.token_spent > SESSION_TOKEN_BUDGET:
         st.warning("Session token budget reached. Further questions may be limited.")
@@ -306,5 +454,5 @@ if user_msg:
     if reply and "not sure" not in reply.lower():
         st.session_state.qa_cache[qn] = reply
 
-    # บันทึกลง history (เก็บเฉพาะข้อความ ไม่ต้องห่อ div ตรงนี้)
+    # เก็บลง history
     st.session_state.history.append(("assistant", reply))
