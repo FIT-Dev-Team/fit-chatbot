@@ -340,6 +340,8 @@ html("""
 (function(){
   const btn = document.getElementById('scroll-to-latest');
   const d = window.parent?.document || document;
+
+  // คลิกแล้วเลื่อนไป assistant bubble สุดท้าย
   btn.onclick = () => {
     const as = d.querySelectorAll('[data-fit-role="assistant"]');
     if(as && as.length){
@@ -347,14 +349,11 @@ html("""
     }
   };
 
-  // ซ่อน/แสดงปุ่มตามตำแหน่ง scroll
+  // ซ่อน/แสดงปุ่มตามตำแหน่ง scroll (ถ้าอยู่ใกล้ล่างสุดก็ซ่อน)
   const root = d.scrollingElement || d.documentElement;
   const toggleBtn = () => {
-    if(root.scrollTop < root.scrollHeight - window.innerHeight - 400){
-      btn.style.display = 'block';
-    } else {
-      btn.style.display = 'none';
-    }
+    const nearBottom = root.scrollTop >= (root.scrollHeight - window.innerHeight - 400);
+    btn.style.display = nearBottom ? 'none' : 'block';
   };
   window.addEventListener('scroll', toggleBtn, true);
   toggleBtn();
