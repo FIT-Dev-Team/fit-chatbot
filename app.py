@@ -26,6 +26,23 @@ LOG_QNA = LOG_DIR / "qna_log.csv"
 LOG_UNK = LOG_DIR / "unanswered.csv"
 SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "fit@lightblueconsulting.com")
 
+SUPPORT_FALLBACK_MSG = (
+    "I’m sorry, but I’m not able to answer this question at the moment. "
+    "Please contact our FIT Support Team for assistance.\n\n"
+    f"• Contact FIT Support: [{SUPPORT_EMAIL}](mailto:{SUPPORT_EMAIL})\n"
+)
+
+def is_low_confidence_text(txt: str) -> bool:
+    t = (txt or "").strip().lower()
+    if not t or len(t) < 4:
+        return True
+    hints = [
+        "not sure", "i’m not sure", "i am not sure",
+        "don't know", "do not know", "unsure",
+        "cannot answer", "can't answer"
+    ]
+    return any(h in t for h in hints)
+
 # ---------- Theme Injection (ปรับ input pill ให้เต็มแถว + typing dots) ----------
 def inject_theme():
     css = r"""
@@ -64,7 +81,7 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
   padding:8px 10px 8px 16px !important;
   overflow:hidden !important;
 }
-[data-testid="stChatInput"] > div > :first-child{ flex:1 1 auto !important; min-width:0 }
+[data-testid="stChatInput"] > div > :first-child{ flex:1 1 auto !้น; min-width:0 }
 [data-testid="stChatInput"] > div > :last-child{ flex:0 0 auto }
 [data-testid="stChatInput"] textarea{
   background:#6A0040!important; color:var(--text-main)!important;
@@ -83,7 +100,7 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
 button[kind="primary"]{ background:var(--btn-bg)!important; color:var(--accent)!important; border:0!important; border-radius:12px!important; font-weight:600!important; }
 button[kind="primary"]:hover{ background:var(--btn-hover)!important; box-shadow:0 0 10px #FFD7E044; }
 
-/* typing dots (สำหรับ Thinking…) */
+/* typing dots */
 .typing{ display:inline-flex; align-items:center; gap:8px; line-height:1 }
 .typing .dots{ display:inline-flex; gap:6px }
 .typing .dot{
@@ -98,6 +115,23 @@ button[kind="primary"]:hover{ background:var(--btn-hover)!important; box-shadow:
   0%,100%{ opacity:.25; transform: translateY(0) }
   50%{    opacity:1;   transform: translateY(-3px) }
 }
+
+/* ===== Quick suggestion chips ===== */
+#fit-suggest .stButton > button{
+  background: #3A8DFF !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  padding: 6px 12px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25) !important;
+}
+#fit-suggest .stButton > button:hover{
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.28) !important;
+}
+#fit-suggest .stButton{ margin: 2px 6px 8px 0 !important; }
 a,.stMarkdown a{ color:var(--accent)!important; text-decoration:none; font-weight:600; }
 a:hover{ text-decoration:underline; }
 """
@@ -123,31 +157,22 @@ def inject_scroll_to_latest_button():
     html("""
 <script>
 (function(){
-  // ใช้ parent document ได้เมื่อไม่ cross-origin; ถ้าไม่ได้ให้ fallback เป็น document ปัจจุบัน
   let d = document;
   try {
     if (window.parent && window.parent !== window && window.parent.document) {
-      // ทดสอบการอ่าน property ง่าย ๆ ป้องกัน cross-origin error
       void window.parent.document.nodeType;
       d = window.parent.document;
     }
-  } catch (e) { /* fallback = document ปัจจุบัน */ }
+  } catch (e) {}
 
-  // ===== CSS (ใส่ครั้งเดียว) =====
   if(!d.querySelector('style[data-fit-scroll-style]')){
     const st = d.createElement('style');
     st.setAttribute('data-fit-scroll-style','1');
     st.textContent = `
       #fit-scroll-latest{
-        position: fixed;
-        right: 24px;
-        bottom: 120px;
-        z-index: 99999;
-        display: none;
-        width: 44px; height: 44px;
-        border: 2px solid #000;
-        border-radius: 50%;
-        background:#fff; color:#000;
+        position: fixed; right: 24px; bottom: 120px; z-index: 99999;
+        display: none; width: 44px; height: 44px;
+        border: 2px solid #000; border-radius: 50%; background:#fff; color:#000;
         box-shadow: 0 6px 16px rgba(0,0,0,0.35);
         cursor: pointer; justify-content: center; align-items: center;
         transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
@@ -158,7 +183,6 @@ def inject_scroll_to_latest_button():
     (d.head || d.body).appendChild(st);
   }
 
-  // ===== ปุ่ม (ใส่ครั้งเดียว) =====
   if(!d.getElementById('fit-scroll-latest')){
     const btn = d.createElement('button');
     btn.id = 'fit-scroll-latest';
@@ -176,10 +200,9 @@ def inject_scroll_to_latest_button():
 
   const btn  = d.getElementById('fit-scroll-latest');
 
-  // ✅ เลือกเฉพาะบับเบิลของ "assistant" เท่านั้น
   function getAssistantNodesSorted(){
     const nodes = Array.from(d.querySelectorAll('[data-fit-role="assistant"]'))
-      .filter(el => el.offsetParent !== null); // ต้องมองเห็น
+      .filter(el => el.offsetParent !== null);
     nodes.sort((a,b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
     return nodes;
   }
@@ -187,7 +210,6 @@ def inject_scroll_to_latest_button():
   function scrollToLastAssistant(){
     const nodes = getAssistantNodesSorted();
     if (nodes.length){
-      // ใช้ scrollIntoView ปล่อยให้เบราเซอร์หา container ที่เลื่อนเอง (กันพลาดเรื่อง container หลายชั้น)
       nodes[nodes.length-1].scrollIntoView({ behavior: "smooth", block: "end" });
     } else {
       const root = d.scrollingElement || d.documentElement || d.body;
@@ -195,7 +217,6 @@ def inject_scroll_to_latest_button():
     }
   }
 
-  // ใช้สภาพจริงของหน้า (documentElement) เพื่อตัดสินว่าอยู่ใกล้ก้นหน้าจอหรือไม่
   function nearBottom(){
     const root = d.scrollingElement || d.documentElement || d.body;
     return ((root.scrollTop || 0) + window.innerHeight + 120) >= root.scrollHeight;
@@ -208,14 +229,10 @@ def inject_scroll_to_latest_button():
   }
 
   btn.addEventListener("click", scrollToLastAssistant);
-
-  // ติดตามการเลื่อน/ขนาด/DOM เปลี่ยน เพื่อโชว์/ซ่อนปุ่มอัตโนมัติ
   window.addEventListener("scroll",  refreshButton, true);
   window.addEventListener("resize",  refreshButton, true);
   new MutationObserver(() => setTimeout(refreshButton, 50))
     .observe(d.body, {childList:true, subtree:true});
-
-  // first paint
   setTimeout(refreshButton, 0);
 })();
 </script>
@@ -261,7 +278,7 @@ def scroll_to_last_assistant():
     </script>
     """, height=0)
 
-# เรียก injects (ต้องเรียกหลังประกาศฟังก์ชัน)
+# เรียก injects
 inject_theme()
 inject_scroll_to_latest_button()
 
@@ -312,7 +329,7 @@ def tokens_today_from_log(path: Path) -> int:
     total = 0
     with path.open("r", encoding="utf-8") as f:
         for i, line in enumerate(f):
-            if i == 0 and line.startswith("ts"):  # header
+            if i == 0 and line.startswith("ts"):
                 continue
             cols = [c.strip() for c in line.rstrip("\n").split(",")]
             if not cols: continue
@@ -332,11 +349,65 @@ def norm_q(s: str) -> str:
 
 GREETINGS = {"hi","hello","hey","สวัสดี","หวัดดี"}
 
+# NEW: suggestion display mode
+if "sugg_mode" not in st.session_state:
+    st.session_state.sugg_mode = "top"  # top | hidden | footer
+
+# --- scroll-after-rerun flag ---
+def request_scroll_next_run():
+    st.session_state["__scroll_after__"] = True
+
+# NEW: a single source of truth for questions
+SUGGESTED_QS = [
+    "What is FWCV?",
+    "When do I enter covers?",
+    "How to export monthly report?",
+    "What is a COMPLETE set?",
+    "How do smart scales connect?",
+]
+
+def render_suggestions_top():
+    """Show chips on top only when mode == 'top'."""
+    if st.session_state.sugg_mode != "top" or not SUGGESTED_QS:
+        return
+    st.markdown("**Quick help:** Choose a common question:")
+    with st.container():
+        st.markdown('<div id="fit-suggest">', unsafe_allow_html=True)
+        cols = st.columns(5)
+        for i, q in enumerate(SUGGESTED_QS):
+            c = cols[i % len(cols)]
+            if c.button(q, key=f"sugg_top_{i}"):
+                st.session_state["queued_msg"] = q
+                st.session_state.sugg_mode = "hidden"
+                st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+def render_suggestions_footer():
+    """Show suggestion chips OUTSIDE chat bubbles (bottom area)."""
+    if not SUGGESTED_QS:
+        return
+    st.markdown("---")
+    st.markdown("**Quick help:**")
+    with st.container():
+        st.markdown('<div id="fit-suggest">', unsafe_allow_html=True)
+        cols = st.columns(5)
+        for i, q in enumerate(SUGGESTED_QS):
+            c = cols[i % len(cols)]
+            if c.button(q, key=f"sugg_footer_{i}"):
+                st.session_state["queued_msg"] = q
+                st.session_state.sugg_mode = "hidden"
+                st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
 # ---------- UI ----------
 st.title("💬 FIT Assistant (FIT AI HELPER)")
 st.caption("Grounded answers from your FIT FAQ with [Q#] citations. Low-confidence questions are logged for review.")
 
-# แสดงประวัติ: ห่อเฉพาะ assistant ด้วย data-fit-role ให้ปุ่ม/scroll หาเจอ
+# หน้าแรก (ยังไม่มี history) และโหมดยังเป็น top → แสดงชิปบนสุด
+if not st.session_state.history and st.session_state.sugg_mode == "top":
+    render_suggestions_top()
+
+# แสดง history
 for role, msg in st.session_state.history:
     with st.chat_message(role):
         if role == "assistant":
@@ -344,7 +415,18 @@ for role, msg in st.session_state.history:
         else:
             st.markdown(msg)
 
+# (อย่าวาด footer ตรงนี้ — ไปวาดท้ายไฟล์หลัง logic ทั้งหมด)
+
 user_msg = st.chat_input("Ask something about FIT…")
+
+# ถ้ามีข้อความที่คิวไว้จากการกดชิป ให้ใช้แทน
+queued = st.session_state.pop("queued_msg", None)
+if queued and not user_msg:
+    user_msg = queued
+
+# พิมพ์เอง -> ซ่อนชิประหว่างถาม
+if user_msg and queued is None:
+    st.session_state.sugg_mode = "hidden"
 
 if user_msg:
     # Debounce
@@ -360,33 +442,36 @@ if user_msg:
 
     qn = norm_q(user_msg)
 
-    # Greetings / very short
+    # Greetings / very short  ---- early-exit → footer + rerun + scroll flag
     if qn in GREETINGS or len(qn) < 3:
         reply = "Hi! Ask me about FIT (e.g., “What is FWCV?” or “When do I enter covers?”)."
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        scroll_to_last_assistant()
-        st.stop()
+        st.session_state.sugg_mode = "footer"
+        request_scroll_next_run()
+        st.rerun()
 
-    # Daily budget
+    # Daily budget  ---- early-exit → footer + rerun + scroll flag
     if tokens_today_from_log(LOG_QNA) > DAILY_TOKEN_BUDGET:
         reply = "Daily AI budget is reached. Please try again tomorrow."
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        scroll_to_last_assistant()
-        st.stop()
+        st.session_state.sugg_mode = "footer"
+        request_scroll_next_run()
+        st.rerun()
 
-    # Cache
+    # Cache  ---- early-exit → footer + rerun + scroll flag
     cached = st.session_state.qa_cache.get(qn)
     if cached:
         reply = cached
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        scroll_to_last_assistant()
-        st.stop()
+        st.session_state.sugg_mode = "footer"
+        request_scroll_next_run()
+        st.rerun()
 
     # --- Retrieve ---
     hits = retrieve(user_msg, k=TOP_K, min_sim=MIN_SIM)
@@ -399,7 +484,7 @@ if user_msg:
             for h in (hits or [])
         ])
 
-    # Gate by similarity (fallback with contact)
+    # Gate by similarity (fallback with contact)  ---- early-exit → footer + rerun + scroll flag
     if not hits or hits[0]["score"] < MIN_SIM:
         reply = (
             "I’m sorry, but I’m not able to answer this question at the moment. Please contact our FIT Support Team for assistance.\n\n"
@@ -409,10 +494,11 @@ if user_msg:
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        scroll_to_last_assistant()
-        st.stop()
+        st.session_state.sugg_mode = "footer"
+        request_scroll_next_run()
+        st.rerun()
 
-    # --- LLM ---  ✅ “กำลังคิด…” แล้วแทนที่ด้วยคำตอบในบับเบิลเดิม
+    # --- LLM ---  “กำลังคิด…” แล้วแทนที่ด้วยคำตอบในบับเบิลเดิม (ไม่ rerun ตรงนี้)
     with st.chat_message("assistant"):
         thinking = st.empty()
         thinking.markdown(
@@ -428,15 +514,27 @@ if user_msg:
             ''',
             unsafe_allow_html=True
         )
-        scroll_to_last_assistant()
 
         result = answer_with_llm(user_msg, hits)
         reply   = result.get("text", "")
         usage   = result.get("usage", {})
         latency = result.get("latency", 0.0)
 
+        # ลบ citation tag [Q1][Q2] ออก
+        import re
+        reply = re.sub(r"\[Q\d+\]", "", reply).strip()
+
+        # NEW: ถ้าคำตอบไม่มั่นใจ → แทนด้วยข้อความติดต่อทีม + log เป็น unanswered
+        if is_low_confidence_text(reply):
+            log_unanswered(user_msg, hits)
+            reply = SUPPORT_FALLBACK_MSG
+
         thinking.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        scroll_to_last_assistant()
+
+        # เก็บลง history + สลับ footer + ขอเลื่อน (ไม่ rerun ตรงนี้)
+        st.session_state.history.append(("assistant", reply))
+        st.session_state.sugg_mode = "footer"
+        request_scroll_next_run()
 
     # Error debug (optional)
     if result.get("error"):
@@ -454,14 +552,18 @@ if user_msg:
     if st.session_state.token_spent > SESSION_TOKEN_BUDGET:
         st.warning("Session token budget reached. Further questions may be limited.")
 
-    # Log / unanswered
-    if (not reply) or ("not sure" in reply.lower()) or (hits[0]["score"] < max(MIN_SIM, 0.36)):
+    # Log / unanswered (ยังคงกันกรณีอื่นๆ)
+    if (reply == SUPPORT_FALLBACK_MSG) or (not reply) or (hits[0]["score"] < max(MIN_SIM, 0.36)):
         log_unanswered(user_msg, hits)
     log_qna(user_msg, hits, reply, usage, latency)
 
-    # Cache good answers
-    if reply and "not sure" not in reply.lower():
+    # Cache good answers (avoid caching fallback)
+    if reply and (reply != SUPPORT_FALLBACK_MSG) and ("not sure" not in reply.lower()):
         st.session_state.qa_cache[qn] = reply
 
-    # เก็บลง history
-    st.session_state.history.append(("assistant", reply))
+# ---------- วาด Footer + สั่งเลื่อน (ทำท้ายสุดของไฟล์เสมอ) ----------
+if st.session_state.sugg_mode == "footer":
+    render_suggestions_footer()
+
+if st.session_state.pop("__scroll_after__", False):
+    scroll_to_last_assistant()
