@@ -1,0 +1,6 @@
+[theme]
+base = "dark"  # หรือ "light" ถ้าอยากบังคับแบบสว่าง
+primaryColor = "#F7F3CE"
+backgroundColor = "#7C0046"
+secondaryBackgroundColor = "#8A0053"
+textColor = "#FFD7E0"
