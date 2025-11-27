@@ -1,37 +1,44 @@
-# llm.py
+# llm.py  — Mistral version (no ChatMessage import)
+
 import os, time
 from typing import List, Dict, Tuple
 from dotenv import load_dotenv
-import openai
+
+# ใช้ client แบบใหม่ของ Mistral
+from mistralai import Mistral
 
 load_dotenv()
 
-# ลองอ่านจาก env ก่อน
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+# ---- API key & model ----
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY", "")
 
-# ถ้าเป็น Streamlit Cloud ให้ลองอ่านจาก secrets ด้วย (ถ้ามี)
-if not OPENAI_API_KEY:
+# ลองอ่านจาก Streamlit secrets ด้วย (กรณี deploy ข้างหน้า)
+if not MISTRAL_API_KEY:
     try:
-        import streamlit as st  # จะสำเร็จเฉพาะตอนรันใน Streamlit
-        OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", OPENAI_API_KEY)
+        import streamlit as st
+        MISTRAL_API_KEY = st.secrets.get("MISTRAL_API_KEY", MISTRAL_API_KEY)
     except Exception:
         pass
 
-if not OPENAI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY not found. Put it in .env OR Streamlit secrets.")
+if not MISTRAL_API_KEY:
+    raise RuntimeError("MISTRAL_API_KEY not found. Put it in .env OR Streamlit secrets.")
 
-MODEL              = os.getenv("OPENAI_MODEL") or os.getenv("MODEL", "gpt-4o-mini")
-SMART_MODEL        = os.getenv("OPENAI_SMART_MODEL") or os.getenv("SMART_MODEL", "gpt-4o")
-MAX_ANSWER_TOKENS  = int(os.getenv("MAX_ANSWER_TOKENS", 320))
-MAX_CTX_CHARS      = int(os.getenv("MAX_CTX_CHARS", 4000))
-ALLOW_ESCALATE     = os.getenv("ALLOW_ESCALATE", "1") == "1"
-REQUEST_TIMEOUT_S  = float(os.getenv("REQUEST_TIMEOUT_S", 30))
-USER_TAG           = os.getenv("USER_TAG", "fit-assistant")
+# ตั้งชื่อ model จาก env (ถ้าไม่ตั้งจะใช้ mistral-small-latest เป็น default)
+MODEL       = os.getenv("MISTRAL_MODEL") or os.getenv("MODEL", "mistral-small-latest")
+SMART_MODEL = os.getenv("MISTRAL_SMART_MODEL") or os.getenv("SMART_MODEL", "mistral-large-latest")
 
-openai.api_key = OPENAI_API_KEY
+MAX_ANSWER_TOKENS = int(os.getenv("MAX_ANSWER_TOKENS", 320))
+MAX_CTX_CHARS     = int(os.getenv("MAX_CTX_CHARS", 4000))
+ALLOW_ESCALATE    = os.getenv("ALLOW_ESCALATE", "1") == "1"
+REQUEST_TIMEOUT_S = float(os.getenv("REQUEST_TIMEOUT_S", 30))
+USER_TAG          = os.getenv("USER_TAG", "fit-assistant")
+
+# สร้าง client ของ Mistral
+client = Mistral(api_key=MISTRAL_API_KEY)
 
 SYSTEM = (
-  "You are FIT Assistant. Answer ONLY about FIT topics (FWCV, covers, waste logging, shift settings, app use). "
+  "You are FIT Assistant. Answer ONLY about FIT topics (FWCV, covers, waste logging, "
+  "shift settings, app use). "
   "Use the provided context and cite facts as [Q#]. "
   "If the context is missing or unrelated, reply: \"I’m not sure from the current docs.\""
 )
@@ -53,6 +60,11 @@ def _clamp_context(chunks: List[Dict]) -> Tuple[str, int]:
     return ("".join(acc) if acc else "NO_CONTEXT"), used
 
 def _usage_to_dict(u) -> Dict[str, int]:
+    """
+    พยายามรองรับทั้งรูปแบบเก่า/ใหม่:
+    - dict ที่มี prompt_tokens / completion_tokens / total_tokens
+    - หรือมี input_tokens / output_tokens
+    """
     try:
         if u is None:
             return {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
@@ -71,27 +83,42 @@ def _usage_to_dict(u) -> Dict[str, int]:
         return {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 
 def _call(model: str, user_q: str, ctx: str) -> Dict:
+    # ใช้ message เป็น dict แบบใน docs ของ mistral
     messages = [
         {"role": "system", "content": SYSTEM},
-        {"role": "user", "content":
-            f"Question: {user_q}\n\nContext:\n{ctx}\n\n"
-            "Rules:\n- Be concise and helpful.\n- Use the context and cite as [Q#].\n"
-            "- If unsure, say: 'I’m not sure from the current docs.'"}
+        {
+            "role": "user",
+            "content": (
+                f"Question: {user_q}\n\nContext:\n{ctx}\n\n"
+                "Rules:\n- Be concise and helpful.\n"
+                "- Use the context and cite as [Q#].\n"
+                "- If unsure, say: 'I’m not sure from the current docs.'"
+            ),
+        },
     ]
+
     t0 = time.time()
     try:
-        resp = openai.chat.completions.create(
+        resp = client.chat.complete(
             model=model,
             messages=messages,
             temperature=0.2,
             max_tokens=MAX_ANSWER_TOKENS,
-            timeout=REQUEST_TIMEOUT_S,
-            user=USER_TAG,
+            # SDK ปัจจุบันไม่มี metadata / user parameter แบบ OpenAI
         )
         t1 = time.time()
+
+        # resp.choices[0].message.content เป็นสตริงใน mistralai
         text = (resp.choices[0].message.content or "").strip()
         usage = _usage_to_dict(getattr(resp, "usage", None))
-        return {"text": text, "usage": usage, "latency": t1 - t0, "model_used": model}
+
+        return {
+            "text": text,
+            "usage": usage,
+            "latency": t1 - t0,
+            "model_used": model,
+        }
+
     except Exception as e:
         t1 = time.time()
         return {

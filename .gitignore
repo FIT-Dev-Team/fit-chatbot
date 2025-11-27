@@ -13,4 +13,4 @@ data/*.csv
 .env
 
 # Jupyter / temporary
-*.ipynb_checkpoints
+*.ipynb_checkpoints*.env

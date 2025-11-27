@@ -81,7 +81,7 @@ h1,h2,h3,h4{ color:var(--accent)!important; text-shadow:0 0 10px #FFD7E055; font
   padding:8px 10px 8px 16px !important;
   overflow:hidden !important;
 }
-[data-testid="stChatInput"] > div > :first-child{ flex:1 1 auto !้น; min-width:0 }
+[data-testid="stChatInput"] > div > :first-child{ flex:1 1 auto !important; min-width:0 }
 [data-testid="stChatInput"] > div > :last-child{ flex:0 0 auto }
 [data-testid="stChatInput"] textarea{
   background:#6A0040!important; color:var(--text-main)!important;
@@ -288,11 +288,31 @@ def load_faq():
     if not DATA_PATH.exists():
         st.error(f"FAQ file not found: {DATA_PATH}")
         return []
-    df = pd.read_csv(DATA_PATH)
+
+    # ลองอ่านด้วย utf-8 ก่อน ถ้าไม่ได้ค่อย fallback
+    encodings_to_try = ["utf-8", "utf-8-sig", "cp1252", "latin1"]
+    last_err = None
+    for enc in encodings_to_try:
+        try:
+            df = pd.read_csv(DATA_PATH, encoding=enc)
+            break
+        except UnicodeDecodeError as e:
+            last_err = e
+            continue
+    else:
+        # ถ้าอ่านไม่ได้ทุก encoding ให้แจ้ง error ชัด ๆ
+        st.error(
+            f"Cannot read FAQ CSV with UTF-8/UTF-8-SIG/CP1252/LATIN1. "
+            f"Please re-save {DATA_PATH.name} as UTF-8. Last error: {last_err}"
+        )
+        return []
+
     if not {"Question", "Answer"}.issubset(df.columns):
         st.error("CSV must contain 'Question' and 'Answer' columns.")
         return []
+
     return df.to_dict(orient="records")
+
 _ = load_faq()
 
 # ---------- Logging ----------
@@ -349,21 +369,22 @@ def norm_q(s: str) -> str:
 
 GREETINGS = {"hi","hello","hey","สวัสดี","หวัดดี"}
 
-# NEW: suggestion display mode
+# suggestion display mode: แค่ top หรือ hidden
 if "sugg_mode" not in st.session_state:
-    st.session_state.sugg_mode = "top"  # top | hidden | footer
+    st.session_state.sugg_mode = "top"  # top | hidden
 
 # --- scroll-after-rerun flag ---
 def request_scroll_next_run():
     st.session_state["__scroll_after__"] = True
 
-# NEW: a single source of truth for questions
+# a single source of truth for questions
 SUGGESTED_QS = [
-    "What is FWCV?",
-    "When do I enter covers?",
-    "How to export monthly report?",
-    "What is a COMPLETE set?",
-    "How do smart scales connect?",
+    "How can I export my data?",
+    "How do I add cover data?",
+    "How do I add food waste data?",
+    "How do I edit a data entry?",
+    "Why is my data consistency low?",
+    "Why is my data not showing on the dashboard?",
 ]
 
 def render_suggestions_top():
@@ -377,23 +398,6 @@ def render_suggestions_top():
         for i, q in enumerate(SUGGESTED_QS):
             c = cols[i % len(cols)]
             if c.button(q, key=f"sugg_top_{i}"):
-                st.session_state["queued_msg"] = q
-                st.session_state.sugg_mode = "hidden"
-                st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
-def render_suggestions_footer():
-    """Show suggestion chips OUTSIDE chat bubbles (bottom area)."""
-    if not SUGGESTED_QS:
-        return
-    st.markdown("---")
-    st.markdown("**Quick help:**")
-    with st.container():
-        st.markdown('<div id="fit-suggest">', unsafe_allow_html=True)
-        cols = st.columns(5)
-        for i, q in enumerate(SUGGESTED_QS):
-            c = cols[i % len(cols)]
-            if c.button(q, key=f"sugg_footer_{i}"):
                 st.session_state["queued_msg"] = q
                 st.session_state.sugg_mode = "hidden"
                 st.rerun()
@@ -414,8 +418,6 @@ for role, msg in st.session_state.history:
             st.markdown(f'<div data-fit-role="assistant">{msg}</div>', unsafe_allow_html=True)
         else:
             st.markdown(msg)
-
-# (อย่าวาด footer ตรงนี้ — ไปวาดท้ายไฟล์หลัง logic ทั้งหมด)
 
 user_msg = st.chat_input("Ask something about FIT…")
 
@@ -442,34 +444,34 @@ if user_msg:
 
     qn = norm_q(user_msg)
 
-    # Greetings / very short  ---- early-exit → footer + rerun + scroll flag
+    # Greetings / very short  ---- early-exit → hide suggestions
     if qn in GREETINGS or len(qn) < 3:
         reply = "Hi! Ask me about FIT (e.g., “What is FWCV?” or “When do I enter covers?”)."
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        st.session_state.sugg_mode = "footer"
+        st.session_state.sugg_mode = "hidden"
         request_scroll_next_run()
         st.rerun()
 
-    # Daily budget  ---- early-exit → footer + rerun + scroll flag
+    # Daily budget  ---- early-exit → hide suggestions
     if tokens_today_from_log(LOG_QNA) > DAILY_TOKEN_BUDGET:
         reply = "Daily AI budget is reached. Please try again tomorrow."
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        st.session_state.sugg_mode = "footer"
+        st.session_state.sugg_mode = "hidden"
         request_scroll_next_run()
         st.rerun()
 
-    # Cache  ---- early-exit → footer + rerun + scroll flag
+    # Cache  ---- early-exit → hide suggestions
     cached = st.session_state.qa_cache.get(qn)
     if cached:
         reply = cached
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        st.session_state.sugg_mode = "footer"
+        st.session_state.sugg_mode = "hidden"
         request_scroll_next_run()
         st.rerun()
 
@@ -484,17 +486,14 @@ if user_msg:
             for h in (hits or [])
         ])
 
-    # Gate by similarity (fallback with contact)  ---- early-exit → footer + rerun + scroll flag
+    # Gate by similarity (fallback with contact)  ---- early-exit → hide suggestions
     if not hits or hits[0]["score"] < MIN_SIM:
-        reply = (
-            "I’m sorry, but I’m not able to answer this question at the moment. Please contact our FIT Support Team for assistance.\n\n"
-            f"• Contact FIT Support: [{SUPPORT_EMAIL}](mailto:{SUPPORT_EMAIL})\n"
-        )
+        reply = SUPPORT_FALLBACK_MSG
         log_unanswered(user_msg, hits or [])
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
-        st.session_state.sugg_mode = "footer"
+        st.session_state.sugg_mode = "hidden"
         request_scroll_next_run()
         st.rerun()
 
@@ -524,16 +523,16 @@ if user_msg:
         import re
         reply = re.sub(r"\[Q\d+\]", "", reply).strip()
 
-        # NEW: ถ้าคำตอบไม่มั่นใจ → แทนด้วยข้อความติดต่อทีม + log เป็น unanswered
+        # ถ้าคำตอบไม่มั่นใจ → แทนด้วยข้อความติดต่อทีม + log เป็น unanswered
         if is_low_confidence_text(reply):
             log_unanswered(user_msg, hits)
             reply = SUPPORT_FALLBACK_MSG
 
         thinking.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
 
-        # เก็บลง history + สลับ footer + ขอเลื่อน (ไม่ rerun ตรงนี้)
+        # เก็บลง history + ซ่อน suggestion + ขอเลื่อน
         st.session_state.history.append(("assistant", reply))
-        st.session_state.sugg_mode = "footer"
+        st.session_state.sugg_mode = "hidden"
         request_scroll_next_run()
 
     # Error debug (optional)
@@ -552,7 +551,7 @@ if user_msg:
     if st.session_state.token_spent > SESSION_TOKEN_BUDGET:
         st.warning("Session token budget reached. Further questions may be limited.")
 
-    # Log / unanswered (ยังคงกันกรณีอื่นๆ)
+    # Log / unanswered
     if (reply == SUPPORT_FALLBACK_MSG) or (not reply) or (hits[0]["score"] < max(MIN_SIM, 0.36)):
         log_unanswered(user_msg, hits)
     log_qna(user_msg, hits, reply, usage, latency)
@@ -561,9 +560,6 @@ if user_msg:
     if reply and (reply != SUPPORT_FALLBACK_MSG) and ("not sure" not in reply.lower()):
         st.session_state.qa_cache[qn] = reply
 
-# ---------- วาด Footer + สั่งเลื่อน (ทำท้ายสุดของไฟล์เสมอ) ----------
-if st.session_state.sugg_mode == "footer":
-    render_suggestions_footer()
-
+# ---------- สั่งเลื่อน (ท้ายสุดของไฟล์เสมอ) ----------
 if st.session_state.pop("__scroll_after__", False):
     scroll_to_last_assistant()

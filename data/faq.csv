@@ -1,8 +1,9 @@
+faq_sample,
 Question,Answer
-Are you using AI in your food waste monitoring system?,"We arenâ€™t currently using AI recognition camera, but weâ€™re integrating AI for our data analysis in our website and dashboard"
-Bye,See you later! Keep up the great work reducing food waste. ðŸ‘‹
-Can I use FIT offline?,Yes. You can record entries offline and theyâ€™ll sync automatically once youâ€™re back online.
-Can the FIT system be customized to meet our needs?,"Yes. FIT is highly customizableâ€”data collection points, reporting formats, and analysis metrics can be tailored to your operational goals and stakeholder requirements."
+Are you using AI in your food waste monitoring system?,"We aren’t currently using AI recognition camera, but we’re integrating AI for our data analysis in our website and dashboard"
+Bye,See you later! Keep up the great work reducing food waste. ??
+Can I use FIT offline?,Yes. You can record entries offline and they’ll sync automatically once you’re back online.
+Can the FIT system be customized to meet our needs?,"Yes. FIT is highly customizable—data collection points, reporting formats, and analysis metrics can be tailored to your operational goals and stakeholder requirements."
 Can the application be used with any type of tablet?,"Yes, it's fully optimized for both Android and iOS devices."
 Can the system work offline?,"Yes, the app has offline functionality. Data will sync automatically when the device reconnects to the internet."
 "Do you only focus on food waste prevention, or do you help with redistribution and other solutions too?","Our tech focuses on prevention, but at LightBlue we also support solutions like redistribution, animal feed, and transformation to help you reach zero waste to landfill."
@@ -15,117 +16,119 @@ FIT Mobile App: How do I enter backdated data?,"Enter data normally, then go to 
 FIT Mobile App: How do I switch between different kitchens?,Tap the kitchen selector at the top of the screen and choose the desired kitchen from the list.
 FIT Mobile App: How do I view past entries?,Open the 'History' tab to view past waste and cover entries; you can edit or delete entries there.
 FIT Mobile App: What is the 'Waiting List' feature?,"If offline, entries are stored in the Waiting List. When Wi-Fi is available, press upload in the Waiting List to sync."
-FIT Web App: How can I export my data?,Use the dashboard 'Download' button and choose the desired format to export data.
+FIT Web App: How can I export my data?,"Select the desired time period in either ""daily"" ""weekly"" or ""monthly"" form. Use the dashboard 'Download' button and choose the desired format to export data."
 FIT Web App: How do I add cover data?,"Go to 'Add Data' > 'Add Covers', select date, kitchen, shift, and enter number of covers, then click 'Save'."
 FIT Web App: How do I add food waste data?,"Go to 'Add Data' > 'Add Food Waste', fill in date, kitchen, shift, waste type, and weight, then click 'Save'."
 FIT Web App: How do I edit a data entry?,"Open the relevant 'Add Data' section, locate the entry, make corrections, and save."
-FIT Web App: Why is my data consistency low?,"Common causes are missing fields, incorrect entries, or irregular updates. Ensure all required fields are filled and data is recorded daily."
+FIT Web App: Why is my data consistency low?,"Common causes are missing fields, incorrect entries, or irregular updates. Ensure all required fields are filled and data is recorded daily. Check your ""on deamnd"" to see the specific missing inputs."
 FIT Web App: Why is my data not showing on the dashboard?,"Check filters like date range and kitchen, and confirm the data was saved correctly."
-"Hi, what can you do?","Hi! Iâ€™m the FIT Assistant. I answer questions about how FIT works, how to use it dayâ€‘toâ€‘day, and how to reduce food waste in your kitchen."
+"Hi, what can you do?","Hi! I’m the FIT Assistant. I answer questions about how FIT works, how to use it day?to?day, and how to reduce food waste in your kitchen."
 How can I contact support?,We have a dedicated support team led but you can reach out to anyone on the team at anytime if you have any questions
-How do I add food waste data?,Navigate to the â€œAdd Dataâ€ section on the left menu and click â€œAdd Food Waste.â€ Fill in the required details and click â€œSave.â€
-How do I classify waste like pineapple or watermelon skin?,We're not chefsâ€”but weâ€™ll help guide you. We'll host a training session to define your Standard Practices for waste classification. The key is staying consistent with what you define as waste.
-How do I contact support?,Use the support link inside the FIT dashboard or email our team. Weâ€™ll get back to you as soon as possible.
+How do I add food waste data?,Navigate to the “Add Data” section on the left menu and click “Add Food Waste.” Fill in the required details and click “Save.”
+How do I classify waste like pineapple or watermelon skin?,We're not chefs—but we’ll help guide you. We'll host a training session to define your Standard Practices for waste classification. The key is staying consistent with what you define as waste.
+How do I contact support?,Use the support link inside the FIT dashboard or email our team. We’ll get back to you as soon as possible.
 How does FIT help in reducing food waste?,"FIT provides insights into where and why waste occurs, enabling actions like portion adjustments, improved inventory, and optimized preparation. Ongoing monitoring tracks progress and guides further improvements."
 How does FIT help with staff engagement?,"FIT empowers staff to see the impact of their actions, turning food waste reduction into a team effort rather than just a task."
 How does FIT integrate with our current kitchen operations?,"FIT integrates smoothly with existing kitchen workflows with minimal disruption. We offer staff training to ensure accurate waste logging, and the system is customized to fit your specific needs. Continuous support is available through check-ins, refresher courses, and an online help desk."
 How does FIT support our sustainability goals?,"By reducing food waste, FIT directly supports sustainability objectives, decreases carbon footprint, and provides data for sustainability reporting to communicate progress to stakeholders."
 How is the baseline calculated?,"Food waste is measured over a defined period to establish an average that represents normal operations across shifts, categories, and waste types. This becomes the baseline for comparison."
+How can I get a monthly report? ,"Go to the dashboard --> under show press ""monthly"" --> select the desired time period and press search, then press download to generated a report of the time period "
+How can I get a weekly report?,"Go to the dashboard --> under show press ""daily"" --> select the desired time period and press search, then press download to generated a report of the time period "
+How can I check the data inputted from my kitchen?,"Go to ""on demand"" and select the specific kitchen (in the case there are multiple kitchens) and then select the time period, then press on the specific input to have the dropdown detials "
 How much time does the system take daily?,Just a few minutes per shift. Most kitchens build it into their routine without disrupting operations.
-How much time will it take for my staff to operate FIT?,"Using the FIT application takes only a few seconds per entry, making it faster and more efficient than manual methods."
 How often should I log waste?,"Ideally during or right after each shift, while the details are fresh. Consistent logging makes your reports much more accurate."
 How secure is the data collected by the FIT system?,FIT employs encryption and strict access controls. Security is continuously monitored and updated to maintain high standards.
 How to categorize plate waste?,"All plate waste will be categorized as ""mixed"" for simplicity and consistency."
-How to reduce plate waste?,"We have several techniques listed in our ""Hacks"" sectionâ€”a repository of practical solutions including for reducing plate waste."
-"Is the food type customizable - as in if the chef wants can they identify specific types of meat (chicken, beef etc) in the FIT app?","Currently, that feature is unavailable, but itâ€™s on our development roadmap for future updates."
-Is there a free trial offered?,"We currently donâ€™t offer a free trial, as our service includes tailored training and implementation to ensure success from day one. However, weâ€™re happy to walk you through a live demo and answer any questions before you commit"
-Iâ€™m new. Where should I start?,Start with the basics: try logging one shift and review the dashboard the next day. You can ask me â€œHow to log waste?â€ or â€œWhat is FWCV?â€ anytime.
+How to reduce plate waste?,"We have several techniques listed in our ""Hacks"" section—a repository of practical solutions including for reducing plate waste."
+"Is the food type customizable - as in if the chef wants can they identify specific types of meat (chicken, beef etc) in the FIT app?","Currently, that feature is unavailable, but it’s on our development roadmap for future updates."
+Is there a free trial offered?,"We currently don’t offer a free trial, as our service includes tailored training and implementation to ensure success from day one. However, we’re happy to walk you through a live demo and answer any questions before you commit"
+I’m new. Where should I start?,Start with the basics: try logging one shift and review the dashboard the next day. You can ask me “How to log waste?” or “What is FWCV?” anytime.
 Question?,answer
-Thanks,"Youâ€™re welcome! If you need anything else, just ask."
+Thanks,"You’re welcome! If you need anything else, just ask."
 "What data does the FIT system collect, and how is it used?","FIT collects amount, type, reason, and timing of food waste. This data is analyzed to identify patterns, improvement areas, and the impact of reduction strategies. Real-time dashboards and regular reports summarize trends and results."
-What equipment is needed to get started?,"youâ€™ll need a digital scale compatible with the FIT software, a tablet or smartphone for logging waste data, and an internet connection for syncing data to the cloud. FIT provides all necessary hardware and installation support."
+What equipment is needed to get started?,"you’ll need a digital scale compatible with the FIT software, a tablet or smartphone for logging waste data, and an internet connection for syncing data to the cloud. FIT provides all necessary hardware and installation support."
 What happens if a team member enters the wrong data?,"Mistakes happen! Entries can be edited in the ""on demand"" section on the FIT website to ensure the data points are accurate"
-What is FWCV?,FWCV = total food waste (kg) Ã· total covers (guests). It shows waste per guest â€” lower is better.
+What is FWCV?,FWCV = total food waste (kg) ÷ total covers (guests). It shows waste per guest — lower is better.
 What is data consistency?,"Data consistency is the reliability of recorded waste data. Accurate, complete, and regular entries are essential for valid insights and effective decision-making."
 "What is food waste per cover (g/cover), and why do we use it?","Food waste per cover (g/cover) measures waste generated per meal served. It is a key KPI because it normalizes for volume, enabling kitchens of different sizes to compare efficiency."
 "What is the FIT Food Waste Monitoring System, and how does it work?","The FIT system helps reduce food waste in commercial kitchens by tracking waste during preparation, spoilage, and plate waste. By measuring food waste at various points, it identifies inefficiencies and supports the implementation of waste-reduction strategies to enhance kitchen efficiency."
 What is the Price of FIT?,The price of the FIT system is based on your specific requirements and the number of recording points and kitchens. Please contact us to get a personalized quote and more information about pricing options.
 What is the baseline?,The baseline is the initial measurement of food waste before interventions. It serves as the reference point to measure the effectiveness of future reduction efforts.
-What is the â€˜Waiting Listâ€™ feature?,"The â€˜Waiting Listâ€™ temporarily stores offline entries. Once Wi-Fi is back, press upload to sync data to the server."
+What is the ‘Waiting List’ feature?,"The ‘Waiting List’ temporarily stores offline entries. Once Wi-Fi is back, press upload to sync data to the server."
 What kind of food waste reduction can we expect to see using your system?,"On average, our clients see up to a 30% reduction in food waste after implementation."
-What makes you different from other food waste tech solutions?,"Unlike many solutions that offer just the tech, we combine technology with hands-on human support. Our team provides training, consulting, and ongoing engagement to make sure you actually achieve your food waste reduction goalsâ€”not just track them."
+What makes you different from other food waste tech solutions?,"Unlike many solutions that offer just the tech, we combine technology with hands-on human support. Our team provides training, consulting, and ongoing engagement to make sure you actually achieve your food waste reduction goals—not just track them."
 What results can we expect from implementing the FIT system?,"Clients typically achieve a measurable reduction in food waste and cost savings from lower disposal fees and better ingredient utilization, leading to improved efficiency and sustainability."
-What support do you provide after setup?,"We provide ongoing support, check-ins, and guidance to help you succeedâ€”not just with the tech, but with behavior change too."
+What support do you provide after setup?,"We provide ongoing support, check-ins, and guidance to help you succeed—not just with the tech, but with behavior change too."
 When do I enter covers?,Enter total covers at the end of each shift once service is completed and you know the actual guests served.
 Who can I contact for additional support or questions?,Use the in-app Help section or contact the support team via the provided contact details.
 Why do I need to add covers?,"Covers (meals served) normalize waste data so metrics like grams per cover (g/cover) can be calculated, allowing fair comparison across days, sites, and service volumes."
 "Why does FIT categorize by shift, category, and type?","Granular categorization by shift, category (e.g., vegetables, meat), and type (prep, spoilage, plate) enables deeper insight into when, where, and why waste occurs, helping target the right improvements."
 Why is kg/day not always correlated with g/cover?,"Kg/day is total waste; g/cover normalizes by meals served. If covers drop, kg/day may fall while g/cover stays flat or rises. The two metrics answer different questions."
-Who are you?,"Iâ€™m FIT Assistant, your virtual helper for LightBlueâ€™s FIT platform. I can help answer questions about food waste tracking, FWCV, covers, shift settings, and how to use the FIT app."
+Who are you?,"I’m FIT Assistant, your virtual helper for LightBlue’s FIT platform. I can help answer questions about food waste tracking, FWCV, covers, shift settings, and how to use the FIT app."
 What is FIT?,"FIT (Food Intel Tech) is a smart food waste monitoring system developed by LightBlue Consulting. It helps hotels and restaurants measure, analyze, and reduce food waste by collecting data from smart scales and visual dashboards."
-What does FIT stand for?,FIT stands for Food Intel Tech â€” a data-driven food waste monitoring and reduction system designed for professional kitchens.
+What does FIT stand for?,FIT stands for Food Intel Tech — a data-driven food waste monitoring and reduction system designed for professional kitchens.
 What can you do?,"I can explain how to use the FIT system, answer questions about food waste data (like FWCV and covers), and guide you through reporting or troubleshooting common issues."
 What is LightBlue?,"LightBlue Consulting is a sustainability consulting company based in Bangkok. We specialize in food waste prevention, training, and technology solutions like FIT, used by major hotel brands around the world."
 Who created FIT?,FIT was created by LightBlue Consulting to make food waste reduction measurable and actionable for professional kitchens.
 How does FIT work?,"FIT connects to Bluetooth smart scales and collects data whenever staff record waste. The system categorizes waste (Preparation, Spoilage, Plate Waste), calculates KPIs like FWCV, and visualizes results in dashboards."
-What is FWCV?,FWCV stands for Food Waste Cost per Visitor. It measures how much food cost is wasted per guest served â€” one of the key performance indicators (KPIs) used in FIT reporting.
+What is FWCV?,FWCV stands for Food Waste Cost per Visitor. It measures how much food cost is wasted per guest served — one of the key performance indicators (KPIs) used in FIT reporting.
 How can I log waste in FIT?,"You can log waste through the FIT web app by selecting the waste category, reason, and weight from the connected smart scale. Each entry helps track food waste trends over time."
 How do I enter covers?,Covers (number of guests served) can be entered at the end of each shift or meal period. FIT uses cover data to calculate FWCV and other KPIs.
 What should I do if the app shows missing data?,"If the system shows missing data, check whether covers or waste logs were entered for that shift. If everything looks fine but the warning remains, please contact support@lightblueconsulting.com for help."
-Can I contact someone for help?,Sure! You can reach our team anytime at support@lightblueconsulting.com. Weâ€™ll be happy to assist you with technical issues or data questions.
+Can I contact someone for help?,Sure! You can reach our team anytime at support@lightblueconsulting.com. We’ll be happy to assist you with technical issues or data questions.
 How do I rebuild or update data?,You can refresh your FAQ and index by updating the CSV or PDF files in the data/ folder and running python build_index.py. This will rebuild your local knowledge index for the chatbot.
 What do you mean by shift settings?,"In FIT, each kitchen shift (Breakfast, Lunch, Dinner, etc.) is defined with its own time window. Correct shift settings ensure data and reports are aligned with actual kitchen operations."
-What kind of reports does FIT generate?,"FIT generates dashboards and downloadable reports showing food waste volume, cost, and reduction progress over time â€” including baseline vs. post-baseline performance."
+What kind of reports does FIT generate?,"FIT generates dashboards and downloadable reports showing food waste volume, cost, and reduction progress over time — including baseline vs. post-baseline performance."
 Who uses FIT?,"FIT is trusted by international hotel groups such as Accor, Hyatt, Marriott, and Constance, as well as restaurants and event venues worldwide."
 Where can I learn more about LightBlue?,"You can visit www.lightblueconsulting.com to learn more about our sustainability projects, case studies, and impact stories."
-What is a COMPLETE set?,"A COMPLETE set means a record where all required fields are filled in correctly â€” food waste data, covers, shift, and category. Only COMPLETE sets are counted in KPI reports."
+What is a COMPLETE set?,"A COMPLETE set means a record where all required fields are filled in correctly — food waste data, covers, shift, and category. Only COMPLETE sets are counted in KPI reports."
 Why is my data marked as INCOMPLETE?,"If covers or one of the waste categories is missing, FIT flags the set as INCOMPLETE. Please review and fill in the missing information to make it COMPLETE."
-How can I check which sets are incomplete?,"Go to the Dashboard or Missing Data tab â€” incomplete sets will be highlighted. You can click each to edit and fill missing covers or waste entries."
-What is the difference between COMPLETE and VALID data?,"COMPLETE means all fields are filled. VALID means data also passes logic checks â€” for example, covers > 0, waste values reasonable, and shifts consistent with time."
+How can I check which sets are incomplete?,Go to the Dashboard or Missing Data tab — incomplete sets will be highlighted. You can click each to edit and fill missing covers or waste entries.
+What is the difference between COMPLETE and VALID data?,"COMPLETE means all fields are filled. VALID means data also passes logic checks — for example, covers > 0, waste values reasonable, and shifts consistent with time."
 Why do I need to mark a set COMPLETE?,"Marking a set COMPLETE confirms all data for that shift is final. It ensures reports and FWCV calculations reflect accurate, approved data."
-What is FWCV?,"FWCV (Food Waste Cost per Visitor) measures the amount of food waste per guest. It helps you understand efficiency and compare performance between sites or time periods."
-How is FWCV calculated?,"FWCV = Total Food Waste (kg) Ã· Total Covers (guests). The lower the value, the better the performance."
-What does a low FWCV mean?,"A lower FWCV means you waste less food per guest served â€” indicating efficient portioning, menu planning, and staff awareness."
-What is the baseline period?,"The baseline is your reference period before starting any waste-reduction actions. It defines your 'normal' waste pattern and allows for future comparisons."
+What is FWCV?,FWCV (Food Waste Cost per Visitor) measures the amount of food waste per guest. It helps you understand efficiency and compare performance between sites or time periods.
+How is FWCV calculated?,"FWCV = Total Food Waste (kg) ÷ Total Covers (guests). The lower the value, the better the performance."
+What does a low FWCV mean?,"A lower FWCV means you waste less food per guest served — indicating efficient portioning, menu planning, and staff awareness."
+What is the baseline period?,The baseline is your reference period before starting any waste-reduction actions. It defines your 'normal' waste pattern and allows for future comparisons.
 How is the baseline used?,"Once the baseline is established, future performance (post-baseline) is compared to measure improvement or savings."
-What does post-baseline mean?,"Post-baseline refers to the time after implementing waste-reduction actions. The system automatically compares it to baseline data to calculate progress."
+What does post-baseline mean?,Post-baseline refers to the time after implementing waste-reduction actions. The system automatically compares it to baseline data to calculate progress.
 What is data consistency?,"Data consistency measures the reliability and regularity of your records. Complete, correctly filled data leads to high consistency scores."
 How can I improve my data consistency?,"Record data daily, ensure covers are entered correctly, and avoid leaving shifts incomplete. Regular habits lead to consistent, trustworthy data."
-How to export a monthly report?,"Go to Reports â†’ Monthly â†’ choose your date range and site â†’ click 'Export'. You can export CSV or Excel summaries including FWCV, total waste, and breakdowns."
-How to export raw data?,"In Reports â†’ Raw Data, select your date range and kitchen, then click Export. This provides full details of each entry for deeper analysis."
+How to export a monthly report?,"Go to Reports ? Monthly ? choose your date range and site ? click 'Export'. You can export CSV or Excel summaries including FWCV, total waste, and breakdowns."
+How to export raw data?,"In Reports ? Raw Data, select your date range and kitchen, then click Export. This provides full details of each entry for deeper analysis."
 How to interpret FWCV changes?,"Compare your weekly or monthly FWCV. If it drops, your kitchen is improving. If it increases, check for changes in covers, menu, or logging accuracy."
-When should I enter covers?,"Enter covers at the end of each shift when service has finished and the actual number of guests is known."
-Can I edit covers later?,"Yes, if you have Editor or Admin access. Go to Add Data â†’ Covers â†’ select date and shift â†’ edit â†’ save."
-What if my covers = 0 but waste > 0?,"This is usually a missing data error. Verify the covers value and correct it â€” otherwise the FWCV may appear inflated."
+When should I enter covers?,Enter covers at the end of each shift when service has finished and the actual number of guests is known.
+Can I edit covers later?,"Yes, if you have Editor or Admin access. Go to Add Data ? Covers ? select date and shift ? edit ? save."
+What if my covers = 0 but waste > 0?,This is usually a missing data error. Verify the covers value and correct it — otherwise the FWCV may appear inflated.
 How do smart scales connect?,"FIT smart scales connect to tablets via Bluetooth. Make sure Bluetooth is enabled, select your scale ID in the app, and pair."
 How to reconnect a scale that stopped working?,"Turn the scale off and on, then tap Reconnect in the FIT Scale App. Check Bluetooth permissions and battery levels."
-Which scale models are supported?,"FIT supports models approved by LightBlue Consulting. Contact support for the latest list of compatible smart scales."
-What is the FIT for Event module?,"FIT for Event is designed for banquets and special events. It helps you track food waste per event style â€” Set Menu, Buffet, Banquet, etc. â€” to measure efficiency per format."
+Which scale models are supported?,FIT supports models approved by LightBlue Consulting. Contact support for the latest list of compatible smart scales.
+What is the FIT for Event module?,"FIT for Event is designed for banquets and special events. It helps you track food waste per event style — Set Menu, Buffet, Banquet, etc. — to measure efficiency per format."
 What are Event Styles?,"Event Styles describe the food service type: Set Menu, Banquet, Cocktail, Family Style, or Coffee Break. They help classify data for comparison across service types."
-Why am I getting 'Missing Data' emails?,"FIT automatically detects shifts or days without COMPLETE data and sends reminders to ensure your reports remain accurate."
-How do I fix missing data?,"Click the Missing Data alert â†’ review the listed shifts â†’ enter missing covers or waste â†’ mark COMPLETE."
-What is 'Data Validation'?,"Data validation checks if your records make sense â€” for example, prevents entries with 0 covers but high waste, or missing shift times."
+Why am I getting 'Missing Data' emails?,FIT automatically detects shifts or days without COMPLETE data and sends reminders to ensure your reports remain accurate.
+How do I fix missing data?,Click the Missing Data alert ? review the listed shifts ? enter missing covers or waste ? mark COMPLETE.
+What is 'Data Validation'?,"Data validation checks if your records make sense — for example, prevents entries with 0 covers but high waste, or missing shift times."
 How to request support?,"Email support@lightblueconsulting.com or contact your FIT representative. Include the date, site, and a brief description of the issue."
 What KPIs does FIT track?,"FIT tracks Total Food Waste (kg), FWCV (kg/cover), Covers, Savings, and Breakdown by category or event style."
-What does Savings mean?,"Savings represent how much waste (and cost) youâ€™ve reduced compared to your baseline â€” calculated from food cost per kg and reduction in total waste."
-How do I analyze weekly performance?,"Use the Dashboard â†’ Weekly Trends to compare FWCV, total waste, and category breakdowns. Look for consistent improvements or anomalies."
-What is the most common reason for high FWCV?,"Usually missing covers or incomplete data entries. Always check covers and ensure all shifts are marked COMPLETE."
-How does FIT use my data?,"FIT stores and analyzes waste data to calculate KPIs and generate dashboards. Data is kept confidential and accessible only to authorized users."
-Can I download all data for the year?,"Yes. Use the Raw Data export with a custom date range covering the entire year â€” results will include all shifts and kitchens."
+What does Savings mean?,Savings represent how much waste (and cost) you’ve reduced compared to your baseline — calculated from food cost per kg and reduction in total waste.
+How do I analyze weekly performance?,"Use the Dashboard ? Weekly Trends to compare FWCV, total waste, and category breakdowns. Look for consistent improvements or anomalies."
+What is the most common reason for high FWCV?,Usually missing covers or incomplete data entries. Always check covers and ensure all shifts are marked COMPLETE.
+How does FIT use my data?,FIT stores and analyzes waste data to calculate KPIs and generate dashboards. Data is kept confidential and accessible only to authorized users.
+Can I download all data for the year?,Yes. Use the Raw Data export with a custom date range covering the entire year — results will include all shifts and kitchens.
 Can I filter reports by kitchen or shift?,"Yes. All reports can be filtered by site, kitchen, shift, or date range for detailed analysis."
 Why is my dashboard not updating?,"Check your date filters, ensure data has been synced if entered offline, and confirm that your internet connection is stable."
 How does FIT ensure data accuracy?,"FIT includes built-in validation checks, automated error detection, and weekly reminders to maintain high data accuracy."
-What should I do if data looks incorrect?,"Double-check the raw entries in Add Data â†’ Food Waste or Covers. Correct or comment instead of deleting for traceability."
-Who can edit or delete data?,"Only users with Editor or Admin permissions can edit or delete entries. Viewer accounts have read-only access."
-Whatâ€™s the best daily routine for accurate data?,"After each shift: record waste, verify weights, enter covers, review totals, then mark COMPLETE before the next shift starts."
-What is 'Baseline vs Post-Baseline' in the report?,"Baseline shows your starting point before intervention; Post-Baseline shows the period after actions. The comparison demonstrates improvement over time."
+What should I do if data looks incorrect?,Double-check the raw entries in Add Data ? Food Waste or Covers. Correct or comment instead of deleting for traceability.
+Who can edit or delete data?,Only users with Editor or Admin permissions can edit or delete entries. Viewer accounts have read-only access.
+What’s the best daily routine for accurate data?,"After each shift: record waste, verify weights, enter covers, review totals, then mark COMPLETE before the next shift starts."
+What is 'Baseline vs Post-Baseline' in the report?,Baseline shows your starting point before intervention; Post-Baseline shows the period after actions. The comparison demonstrates improvement over time.
 Why is my FWCV increasing?,"Possible reasons: fewer covers than usual, special events, or missing prep data. Review details before drawing conclusions."
-How do I switch between kitchens?,"Use the dropdown menu at the top of the dashboard to select a different kitchen or site."
+How do I switch between kitchens?,Use the dropdown menu at the top of the dashboard to select a different kitchen or site.
 How can I view historical trends?,"In the Dashboard, use the date filter to view previous months or years. You can export and compare multiple periods."
-What happens if I forget to mark COMPLETE?,"The day stays open and might trigger 'Missing Data' alerts. You can still edit and complete it later."
-Can FIT work offline?,"Yes. The FIT app stores offline entries and automatically syncs them once connected to the internet again."
-How can I view logs or change shift names?,"Shift configuration can be updated under Admin â†’ Shift Settings (requires Admin role)."
+What happens if I forget to mark COMPLETE?,The day stays open and might trigger 'Missing Data' alerts. You can still edit and complete it later.
+Can FIT work offline?,Yes. The FIT app stores offline entries and automatically syncs them once connected to the internet again.
+How can I view logs or change shift names?,Shift configuration can be updated under Admin ? Shift Settings (requires Admin role).
 What time zone does FIT use?,"Each site operates in its own configured local time zone, set during onboarding or in Admin Settings."
-Can I customize waste categories?,"Yes. Admins can manage waste categories in Admin â†’ Categories to match your kitchenâ€™s operations."
+Can I customize waste categories?,Yes. Admins can manage waste categories in Admin ? Categories to match your kitchen’s operations.
 Who uses FIT?,"FIT is trusted by leading hotel brands such as Hyatt, Marriott, Accor, and Constance, along with restaurants and event venues worldwide."
-Where can I learn more about FIT and LightBlue?,"Visit www.lightblueconsulting.com to learn more about LightBlueâ€™s sustainability work and technology solutions."
+Where can I learn more about FIT and LightBlue?,Visit www.lightblueconsulting.com to learn more about LightBlue’s sustainability work and technology solutions.

@@ -2,7 +2,7 @@ streamlit
 pandas
 chromadb
 sentence-transformers
-openai
+#openai
 python-dotenv
 pymupdf
 tqdm
