@@ -18,7 +18,10 @@ TOP_K = int(os.getenv("TOP_K", 4))
 SESSION_TOKEN_BUDGET = int(os.getenv("SESSION_TOKEN_BUDGET", 30000))
 DAILY_TOKEN_BUDGET = int(os.getenv("DAILY_TOKEN_BUDGET", 300000))
 
-st.set_page_config(page_title="FIT Assistant (RAG + LLM)", page_icon="🍽️")
+st.set_page_config(
+    page_title="FIT Assistant (PUMPUI)",
+    page_icon="assets/pumpui.png",  # หรือ Path("assets/pumpui.png")
+)
 
 DATA_PATH = Path("data/faq.csv")
 LOG_DIR = Path("logs"); LOG_DIR.mkdir(exist_ok=True)
@@ -404,8 +407,14 @@ def render_suggestions_top():
         st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- UI ----------
-st.title("💬 FIT Assistant (FIT AI HELPER)")
-st.caption("Grounded answers from your FIT FAQ with [Q#] citations. Low-confidence questions are logged for review.")
+col_logo, col_title = st.columns([1, 4])
+
+with col_logo:
+    st.image("assets/pumpui.png", width=80)   # ปรับขนาดตามที่ถูกใจ
+
+with col_title:
+    st.title("FIT Assistant (PUMPUI)")
+    #st.caption("Ask anything about using FIT – covers, food waste logs, reports, etc.")
 
 # หน้าแรก (ยังไม่มี history) และโหมดยังเป็น top → แสดงชิปบนสุด
 if not st.session_state.history and st.session_state.sugg_mode == "top":
