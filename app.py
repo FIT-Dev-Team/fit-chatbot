@@ -479,12 +479,12 @@ if user_msg:
     hits = retrieve(user_msg, k=TOP_K, min_sim=MIN_SIM)
 
     # Retrieval debug
-    with st.expander("🔎 Retrieval debug"):
-        st.write([
-            {"score": round(h["score"], 3),
-             "q": h["meta"].get("question","")[:120]}
-            for h in (hits or [])
-        ])
+    #with st.expander("🔎 Retrieval debug"):
+    #    st.write([
+    #        {"score": round(h["score"], 3),
+    #         "q": h["meta"].get("question","")[:120]}
+    #        for h in (hits or [])
+    #    ])
 
     # Gate by similarity (fallback with contact)  ---- early-exit → hide suggestions
     if not hits or hits[0]["score"] < MIN_SIM:
