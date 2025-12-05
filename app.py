@@ -420,15 +420,6 @@ with col_title:
 if not st.session_state.history and st.session_state.sugg_mode == "top":
     render_suggestions_top()
 
-# ถ้ายังไม่มี history เลย ให้ Pumpui ทักทายครั้งแรก
-if not st.session_state.history:
-    greeting = (
-        "Hi! I'm Pumpui.\n"
-        "You can ask me anything about FIT (e.g., “What is food waste per cover?” or “When do I enter covers?”).\n"
-        "How can I help you today?"
-    )
-    st.session_state.history.append(("assistant", greeting))
-
 # แสดง history
 for role, msg in st.session_state.history:
     with st.chat_message(role):
@@ -464,11 +455,7 @@ if user_msg:
 
     # Greetings / very short  ---- early-exit → hide suggestions
     if qn in GREETINGS or len(qn) < 3:
-        reply = (
-            "Hi! I'm Pumpui.\n"
-            "You can ask me anything about FIT (e.g., “What is food waste per cover?” or “When do I enter covers?”).\n"
-            "How can I help you today?"
-        )
+        reply = "Hi! Ask me about FIT (e.g., “What is FWCV?” or “When do I enter covers?”)."
         st.session_state.history.append(("assistant", reply))
         with st.chat_message("assistant"):
             st.markdown(f'<div data-fit-role="assistant">{reply}</div>', unsafe_allow_html=True)
@@ -499,6 +486,14 @@ if user_msg:
 
     # --- Retrieve ---
     hits = retrieve(user_msg, k=TOP_K, min_sim=MIN_SIM)
+
+    # Retrieval debug
+    #with st.expander("🔎 Retrieval debug"):
+    #    st.write([
+    #        {"score": round(h["score"], 3),
+    #         "q": h["meta"].get("question","")[:120]}
+    #        for h in (hits or [])
+    #    ])
 
     # Gate by similarity (fallback with contact)  ---- early-exit → hide suggestions
     if not hits or hits[0]["score"] < MIN_SIM:
