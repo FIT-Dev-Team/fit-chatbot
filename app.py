@@ -394,7 +394,20 @@ def render_suggestions_top():
     """Show chips on top only when mode == 'top'."""
     if st.session_state.sugg_mode != "top" or not SUGGESTED_QS:
         return
-    st.markdown("**Quick help:** Choose a common question:")
+
+    # 🔥 Pumpui greeting text
+    st.markdown(
+        """
+        <div style="font-size:1.1rem; line-height:1.5; margin-bottom:0.5rem;">
+            <b>Hi! I'm Pumpui.</b><br>
+            You can ask me anything about FIT (e.g., “What is food waste per cover?” or “When do I enter covers?”).<br>
+            How can I help you today?
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # suggestion chips
     with st.container():
         st.markdown('<div id="fit-suggest">', unsafe_allow_html=True)
         cols = st.columns(5)
