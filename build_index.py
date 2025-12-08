@@ -20,11 +20,13 @@ NORMALIZE_EMB  = os.getenv("NORMALIZE_EMB", "1") == "1"    # ใช้ normaliza
 client   = chromadb.PersistentClient(path=INDEX_PATH)
 embedder = SentenceTransformer(EMB_MODEL)
 
+
 def clean_text(s: str) -> str:
     s = s.replace("\u00ad", "")                 # soft hyphen
     s = re.sub(r"[ \t]+", " ", s)
     s = re.sub(r"\n{2,}", "\n\n", s)
     return s.strip()
+
 
 def load_csv_faq(path: Path) -> List[Tuple[str, Dict]]:
     """
@@ -36,31 +38,66 @@ def load_csv_faq(path: Path) -> List[Tuple[str, Dict]]:
         raise FileNotFoundError(f"CSV not found: {path}")
 
     rows: List[Tuple[str, Dict]] = []
-    with path.open("r", encoding="utf-8") as f:
-        rdr = csv.DictReader(f)
-        if not {"Question", "Answer"}.issubset(rdr.fieldnames or []):
-            raise ValueError("CSV must contain 'Question' and 'Answer' columns.")
+
+    # อ่าน header ด้วย csv.reader ก่อน เพื่อ control ชื่อคอลัมน์เอง
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        raw_reader = csv.reader(f)
+        try:
+            header = next(raw_reader)
+        except StopIteration:
+            raise ValueError(f"CSV is empty: {path}")
+
+        # ล้างชื่อคอลัมน์: ตัด BOM + ตัด space
+        clean_header = []
+        for col in header:
+            col = str(col).replace("\ufeff", "").strip()
+            clean_header.append(col)
+
+        required = {"Question", "Answer"}
+        if not required.issubset(set(clean_header)):
+            raise ValueError(
+                f"CSV must contain 'Question' and 'Answer' columns. "
+                f"Got: {clean_header}"
+            )
+
+        # ใช้ DictReader ต่อจากตำแหน่งไฟล์ปัจจุบัน (หลัง header แล้ว)
+        rdr = csv.DictReader(f, fieldnames=clean_header)
 
         for r in rdr:
-            q = clean_text((r.get("Question") or "").strip())
-            a = clean_text((r.get("Answer") or "").strip())
+            # ตอนนี้ r["Question"], r["Answer"] จะใช้ header ที่ล้างแล้ว
+            q_raw = (r.get("Question") or "").strip()
+            a_raw = (r.get("Answer") or "").strip()
+
+            q = clean_text(q_raw)
+            a = clean_text(a_raw)
+
             if not q or not a:
+                # ข้ามแถวว่างหรือไม่ครบ
                 continue
-            doc = f"{q}\n\n{a}"                                  # << รวม Q + A
-            rows.append((doc, {"source": path.name, "question": q, "type": "faq"}))
+
+            doc = f"{q}\n\n{a}"  # รวม Q + A เป็น document เดียว
+            meta = {
+                "source": path.name,
+                "question": q,
+                "type": "faq",
+            }
+            rows.append((doc, meta))
+
     return rows
+
 
 def main():
     print(f"🧹 Recreating collection at '{INDEX_PATH}' …")
     try:
         client.delete_collection(name=COLL_NAME)
     except Exception:
+        # ถ้าไม่มี collection เดิมอยู่ ก็ปล่อยผ่าน
         pass
 
     # บังคับ cosine เสมอ (ให้เข้าคู่กับ retrieval.py)
     coll = client.get_or_create_collection(
         name=COLL_NAME,
-        metadata={"hnsw:space": "cosine"}
+        metadata={"hnsw:space": "cosine"},
     )
 
     items = load_csv_faq(CSV_PATH)
@@ -96,6 +133,7 @@ def main():
         print(f"✅ Index built at ./{INDEX_PATH} with {n} items")
     except Exception:
         print(f"✅ Index built at ./{INDEX_PATH} with {len(docs)} items")
+
 
 if __name__ == "__main__":
     main()
