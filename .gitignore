@@ -7,10 +7,14 @@
 
 # Local data folders
 logs/
-data/*.csv
+index/
+chroma_db/
+# data/*.csv  <-- Commented out to allow pushing the FAQ data
+# If you want to keep data private, uncomment the line above
 
 # Secrets
 .env
+.streamlit/secrets.toml
 
 # Jupyter / temporary
-*.ipynb_checkpoints*.env
+*.ipynb_checkpoints

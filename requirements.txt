@@ -1,10 +1,2 @@
 streamlit
 pandas
-chromadb
-sentence-transformers
-#openai
-python-dotenv
-pymupdf
-tqdm
-faiss-cpu
-mistralai==1.9.11
