@@ -48,12 +48,14 @@ def inject_theme():
         box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
         transition: all 0.2s ease !important;
         margin-bottom: 0.5rem !important;
+        width: 100%; /* Full width for mobile friendliness */
     }
     
     .stButton > button:hover {
         background-color: var(--accent) !important;
         color: #FFFFFF !important;
         transform: translateY(-2px);
+        box-shadow: 0 0 10px rgba(0, 212, 255, 0.4) !important;
     }
     
     /* Chat Bubbles */
@@ -74,31 +76,11 @@ def inject_theme():
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     
-    .chat-bubble.bot {
-        align-self: flex-start;
-        background-color: var(--bot-bubble);
-        color: var(--text-main);
-        border-bottom-left-radius: 4px;
-        border: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .chat-bubble.user {
-        align-self: flex-end;
-        background-color: var(--user-bubble);
-        color: #FFFFFF;
-        border-bottom-right-radius: 4px;
-        text-align: right;
-    }
-    
-    /* Avatar */
-    .bot-avatar {
-        width: 32px;
-        height: 32px;
+    /* Avatar Image in Chat */
+    .stImage > img {
         border-radius: 50%;
-        margin-right: 8px;
-        vertical-align: middle;
     }
-    
+
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -130,10 +112,10 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": "Hi there! 👋 I'm Pumpui, your FIT Assistant.\n\nHow can I help you today?"}
     ]
 if "current_options" not in st.session_state:
-    st.session_state.current_options = {"type": "category"} # type: category, subcategory, question, none
+    st.session_state.current_options = {"type": "category"} 
 
 # Helper to append user msg and bot response
-def handle_selection(label, next_type, next_data=None):
+def handle_selection(label, next_type, next_data=None, cat=None, sub=None):
     # 1. User message
     st.session_state.messages.append({"role": "user", "content": label})
     
@@ -151,21 +133,13 @@ def handle_selection(label, next_type, next_data=None):
         ans = next_data['a'].replace("\n", "\n\n")
         st.session_state.messages.append({"role": "assistant", "content": ans})
         
-        # Determine if we show a "Back" or "Reset" options, or just nothing (end of flow)
-        # Check correctness of flow: usually we might want to ask "Anything else?"
-        st.session_state.messages.append({"role": "assistant", "content": "Is there anything else I can help with?"})
-        st.session_state.current_options = {"type": "reset"}
+        # Recursive Suggestions: Show other questions in the same subcategory
+        st.session_state.messages.append({"role": "assistant", "content": "Here are other related questions:"})
+        st.session_state.current_options = {"type": "recursive", "cat": cat, "sub": sub}
 
 def reset_chat():
-    st.session_state.messages = [
-        {"role": "assistant", "content": "How else can I help you?"}
-    ]
+    st.session_state.messages.append({"role": "assistant", "content": "Sure, let's go back to the Main Menu. What topic would you like to explore?"})
     st.session_state.current_options = {"type": "category"}
-
-def back_step():
-    # Simplistic back: just reset to main menu for now or implement stack if needed
-    # For this iteration, "Start Over" is safer.
-    reset_chat()
 
 # --- Main App ---
 def main():
@@ -179,11 +153,7 @@ def main():
         
         if role == "assistant":
             # Bot Bubble
-            avatar_html = ""
             if ASSETS_PATH.exists():
-                # We can't use local path in HTML directly easily without base64, 
-                # but we can use st.image col layout or Streamlit's chat_message.
-                # Let's use Streamlit's native chat_message which handles avatars nicely now.
                 with st.chat_message("assistant", avatar=str(ASSETS_PATH)):
                     st.markdown(content)
             else:
@@ -195,7 +165,6 @@ def main():
                 st.markdown(content)
 
     # 2. Render Options (Buttons) at bottom
-    # We use a container to keep it separate
     st.write("---")
     
     opt_type = st.session_state.current_options.get("type")
@@ -212,8 +181,7 @@ def main():
         cat = st.session_state.current_options.get("data")
         subcats = data_tree.get(cat, {})
         
-        # Back/Reset
-        if st.button("⬅️ Start Over"):
+        if st.button("⬅️ Category"):
             reset_chat()
             st.rerun()
 
@@ -228,19 +196,45 @@ def main():
         sub = st.session_state.current_options.get("sub")
         questions = data_tree.get(cat, {}).get(sub, [])
         
-        if st.button("⬅️ Start Over"):
-            reset_chat()
+        if st.button("⬅️ Back"):
+            # Go back to subcategory selection
+            st.session_state.current_options = {"type": "subcategory", "data": cat}
             st.rerun()
             
         for i, item in enumerate(questions):
             if st.button(item['q'], key=f"btn_q_{i}"):
-                handle_selection(item['q'], "answer", next_data=item)
+                handle_selection(item['q'], "answer", next_data=item, cat=cat, sub=sub)
                 st.rerun()
 
-    elif opt_type == "reset":
-        if st.button("🔄 Start New Conversation"):
-            reset_chat()
-            st.rerun()
+    elif opt_type == "recursive":
+        cat = st.session_state.current_options.get("cat")
+        sub = st.session_state.current_options.get("sub")
+        questions = data_tree.get(cat, {}).get(sub, [])
+
+        # Smart Reset at the TOP or BOTTOM? 
+        # User requested "Smart Reset at the bottom". 
+        
+        # Display sibling questions
+        for i, item in enumerate(questions):
+            # We use a different key prefix 'rec_' to avoid conflict
+            if st.button(item['q'], key=f"rec_btn_q_{i}"):
+                handle_selection(item['q'], "answer", next_data=item, cat=cat, sub=sub)
+                st.rerun()
+
+
+        # Divider
+        st.markdown("---")
+        st.caption("Or switch to a new topic:")
+        
+        cats = sorted(data_tree.keys())
+        cols_cat = st.columns(2)
+        for i, c in enumerate(cats):
+            # distinct key for these recursive category buttons
+            if cols_cat[i%2].button(f"📂 {c}", key=f"rec_cat_{i}"):
+                # We treat this as starting a new topic, but keeping history?
+                # Or just append to history. Let's append.
+                handle_selection(c, "subcategory")
+                st.rerun()
 
 if __name__ == "__main__":
     main()
