@@ -1,38 +1,34 @@
 import streamlit as st
 import pandas as pd
+import os
 from pathlib import Path
 
 # --- Config & Path ---
-import os
-# --- Config & Path ---
-DATA_PATH = Path(os.path.join("data", "faq_decision_tree.csv"))
+BASE_DIR = Path(__file__).parent
+DATA_PATH = BASE_DIR / "data" / "faq_decision_tree.csv"
+ASSETS_PATH = BASE_DIR / "assets" / "pumpui.png"
 
 st.set_page_config(
     page_title="FIT Assistant",
-    page_icon="assets/pumpui.png", 
+    page_icon=str(ASSETS_PATH) if ASSETS_PATH.exists() else "🤖", 
     layout="centered"
 )
 
-# --- Theme Injection (Burgundy) ---
+# --- Theme Injection ---
 def inject_theme():
-    # Futuristic Light Theme (Total Overhaul)
+    # Futuristic Light Theme + Chat Bubbles
     css = r"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     
-    /* Hide Streamlit topmost decoration bar and hamburger menu if desired */
-    header {
-        visibility: hidden !important;
-    }
+    header { visibility: hidden !important; }
     
-    /* Force overrides of Streamlit theme variables */
     :root {
-        --primary-color: #00D4FF !important;
         --bg-main: #F8F9FF;
         --text-main: #1A1A2E;
         --accent: #00D4FF;
-        --glass-bg: #FFFFFF;
-        --glass-border: rgba(0, 212, 255, 0.4);
+        --user-bubble: #00D4FF;
+        --bot-bubble: #FFFFFF;
     }
     
     .stApp {
@@ -41,71 +37,68 @@ def inject_theme():
         font-family: 'Inter', sans-serif !important;
     }
     
-    /* Titles and Headers */
-    h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
-        color: var(--text-main) !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.5px;
-    }
-    
-    .stMarkdown, p, label, div, span {
-        color: var(--text-main) !important;
-    }
-
-    /* Primary Buttons */
+    /* Buttons (Options) */
     .stButton > button {
         background-color: #FFFFFF !important;
         color: var(--text-main) !important;
         border: 1px solid var(--accent) !important;
-        border-radius: 8px !important;
-        font-weight: 600 !important;
-        padding: 0.6rem 1rem !important;
-        box-shadow: 0 0 10px rgba(0, 212, 255, 0.15) !important;
-        transition: all 0.3s ease !important;
+        border-radius: 20px !important; /* Pill shape */
+        padding: 0.5rem 1rem !important;
+        font-size: 0.9rem !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+        transition: all 0.2s ease !important;
+        margin-bottom: 0.5rem !important;
     }
     
     .stButton > button:hover {
         background-color: var(--accent) !important;
         color: #FFFFFF !important;
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 15px rgba(0, 212, 255, 0.5) !important;
         transform: translateY(-2px);
     }
     
-    .stButton > button:active {
-        border-color: var(--accent) !important;
-        background-color: var(--accent) !important;
-        color: #FFFFFF !important;
+    /* Chat Bubbles */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
     }
-
-    /* Answer Box */
-    .answer-box {
-        background: #FFFFFF;
-        border: 1px solid var(--glass-border);
-        border-left: 5px solid var(--accent); /* Thick left border */
-        border-radius: 8px;
-        padding: 2rem;
-        margin-top: 1rem;
-        box-shadow: 0 4px 24px rgba(0, 212, 255, 0.15); /* Blue glow */
+    
+    .chat-bubble {
+        padding: 1rem 1.2rem;
+        border-radius: 16px;
+        max-width: 80%;
+        line-height: 1.5;
+        font-size: 1rem;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .chat-bubble.bot {
+        align-self: flex-start;
+        background-color: var(--bot-bubble);
         color: var(--text-main);
+        border-bottom-left-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.05);
     }
-
-    /* Back Buttons (Secondary) */
-    div[data-testid="stHorizontalBlock"] button {
-        border-color: #E0E0E0 !important;
-        box-shadow: none !important;
+    
+    .chat-bubble.user {
+        align-self: flex-end;
+        background-color: var(--user-bubble);
+        color: #FFFFFF;
+        border-bottom-right-radius: 4px;
+        text-align: right;
     }
-    div[data-testid="stHorizontalBlock"] button:hover {
-        border-color: var(--accent) !important;
-        color: var(--accent) !important;
-        background-color: #FFFFFF !important;
+    
+    /* Avatar */
+    .bot-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
     }
-
-    /* Container Spacing */
-    .block-container {
-        max_width: 800px;
-        padding-top: 2rem;
-    }
+    
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -113,208 +106,141 @@ def inject_theme():
 # --- Data Loading ---
 @st.cache_data
 def load_faq_data():
-    if not DATA_PATH.exists():
-        st.error(f"Data file not found at {DATA_PATH}")
-        return {}
-
+    if not DATA_PATH.exists(): return {}
     try:
         df = pd.read_csv(DATA_PATH)
-        # Normalize columns: remove whitespace
         df.columns = [c.strip() for c in df.columns]
-        
-        required = {"Category", "Subcategory", "Question", "Answer"}
-        if not required.issubset(set(df.columns)):
-            st.error(f"CSV must have columns: {required}")
-            return {}
-
-        # Parse into nested structure:
-        # tree = { 
-        #    "Category A": {
-        #        "Subcategory 1": [ { "q": "Question?", "a": "Answer" }, ... ],
-        #        ...
-        #    }, ...
-        # }
         tree = {}
-        
         for _, row in df.iterrows():
             cat = str(row["Category"]).strip()
             sub = str(row["Subcategory"]).strip()
             qst = str(row["Question"]).strip()
             ans = str(row["Answer"]).strip()
+            if not cat or not sub or not qst: continue
             
-            if not cat or not sub or not qst:
-                continue
-
-            if cat not in tree:
-                tree[cat] = {}
-            if sub not in tree[cat]:
-                tree[cat][sub] = []
-            
+            if cat not in tree: tree[cat] = {}
+            if sub not in tree[cat]: tree[cat][sub] = []
             tree[cat][sub].append({"q": qst, "a": ans})
-            
         return tree
-
-    except Exception as e:
-        st.error(f"Error reading CSV: {e}")
-        return {}
+    except: return {}
 
 # --- State Management ---
-# Steps: menu -> subcategory -> questions -> answer
-if "step" not in st.session_state:
-    st.session_state.step = "menu"
-if "selected_category" not in st.session_state:
-    st.session_state.selected_category = None
-if "selected_subcategory" not in st.session_state:
-    st.session_state.selected_subcategory = None
-if "selected_item" not in st.session_state:
-    st.session_state.selected_item = None
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Hi there! 👋 I'm Pumpui, your FIT Assistant.\n\nHow can I help you today?"}
+    ]
+if "current_options" not in st.session_state:
+    st.session_state.current_options = {"type": "category"} # type: category, subcategory, question, none
 
-def go_home():
-    st.session_state.step = "menu"
-    st.session_state.selected_category = None
-    st.session_state.selected_subcategory = None
-    st.session_state.selected_item = None
+# Helper to append user msg and bot response
+def handle_selection(label, next_type, next_data=None):
+    # 1. User message
+    st.session_state.messages.append({"role": "user", "content": label})
+    
+    # 2. Logic for next step
+    if next_type == "subcategory":
+        st.session_state.messages.append({"role": "assistant", "content": f"Sure, what about **{label}**?"})
+        st.session_state.current_options = {"type": "subcategory", "data": label}
+        
+    elif next_type == "question":
+        st.session_state.messages.append({"role": "assistant", "content": "Please select a specific question:"})
+        st.session_state.current_options = {"type": "question", "cat": next_data, "sub": label}
+        
+    elif next_type == "answer":
+        # Find answer
+        ans = next_data['a'].replace("\n", "\n\n")
+        st.session_state.messages.append({"role": "assistant", "content": ans})
+        
+        # Determine if we show a "Back" or "Reset" options, or just nothing (end of flow)
+        # Check correctness of flow: usually we might want to ask "Anything else?"
+        st.session_state.messages.append({"role": "assistant", "content": "Is there anything else I can help with?"})
+        st.session_state.current_options = {"type": "reset"}
 
-def go_category(cat_name):
-    st.session_state.selected_category = cat_name
-    st.session_state.step = "subcategory"
+def reset_chat():
+    st.session_state.messages = [
+        {"role": "assistant", "content": "How else can I help you?"}
+    ]
+    st.session_state.current_options = {"type": "category"}
 
-def go_subcategory(sub_name):
-    st.session_state.selected_subcategory = sub_name
-    st.session_state.step = "questions"
-
-def go_answer(item):
-    st.session_state.selected_item = item
-    st.session_state.step = "answer"
-
-def go_back():
-    if st.session_state.step == "answer":
-        st.session_state.step = "questions"
-        st.session_state.selected_item = None
-    elif st.session_state.step == "questions":
-        st.session_state.step = "subcategory"
-        st.session_state.selected_subcategory = None
-    elif st.session_state.step == "subcategory":
-        go_home()
+def back_step():
+    # Simplistic back: just reset to main menu for now or implement stack if needed
+    # For this iteration, "Start Over" is safer.
+    reset_chat()
 
 # --- Main App ---
 def main():
     inject_theme()
-    
-    # Header
-    col1, col2 = st.columns([1, 5])
-    with col1:
-        if Path("assets/pumpui.png").exists():
-            st.image("assets/pumpui.png", width=80)
-        else:
-            st.write("🤖") 
-    with col2:
-        st.title("FIT Assistant Support")
-
     data_tree = load_faq_data()
-    if not data_tree:
-        st.warning("No FAQ data available.")
-        return
-
-    step = st.session_state.step
-
-    # -------------------------------------------------------------------------
-    # 1. Main Menu (Categories)
-    # -------------------------------------------------------------------------
-    if step == "menu":
-        st.markdown("### How can I help you today?")
-        st.markdown("Select a topic below:")
+    
+    # 1. Render History
+    for msg in st.session_state.messages:
+        role = msg["role"]
+        content = msg["content"]
         
-        cats = sorted(data_tree.keys())
-        # Optional: put 'General' last if present
-        # if "General" in cats: ...
+        if role == "assistant":
+            # Bot Bubble
+            avatar_html = ""
+            if ASSETS_PATH.exists():
+                # We can't use local path in HTML directly easily without base64, 
+                # but we can use st.image col layout or Streamlit's chat_message.
+                # Let's use Streamlit's native chat_message which handles avatars nicely now.
+                with st.chat_message("assistant", avatar=str(ASSETS_PATH)):
+                    st.markdown(content)
+            else:
+                 with st.chat_message("assistant"):
+                    st.markdown(content)
+        else:
+            # User Bubble
+            with st.chat_message("user"):
+                st.markdown(content)
 
+    # 2. Render Options (Buttons) at bottom
+    # We use a container to keep it separate
+    st.write("---")
+    
+    opt_type = st.session_state.current_options.get("type")
+    
+    if opt_type == "category":
+        cats = sorted(data_tree.keys())
         cols = st.columns(2)
         for i, cat in enumerate(cats):
-            with cols[i % 2]:
-                if st.button(f"📂 {cat}", key=f"cat_{i}"):
-                    go_category(cat)
-                    st.rerun()
+            if cols[i%2].button(cat, key=f"btn_cat_{i}"):
+                handle_selection(cat, "subcategory")
+                st.rerun()
 
-    # -------------------------------------------------------------------------
-    # 2. Subcategory Menu
-    # -------------------------------------------------------------------------
-    elif step == "subcategory":
-        cat = st.session_state.selected_category
-        
-        # Navigation
-        if st.button("⬅️ Back to Menu", key="back_cat"):
-            go_back()
-            st.rerun()
-            
-        st.markdown(f"### {cat}")
-        st.write("Please select a sub-topic:")
-        st.write("---")
-
+    elif opt_type == "subcategory":
+        cat = st.session_state.current_options.get("data")
         subcats = data_tree.get(cat, {})
-        sorted_subs = sorted(subcats.keys())
         
-        for i, sub in enumerate(sorted_subs):
-            if st.button(f"🔹 {sub}", key=f"sub_{i}"):
-                go_subcategory(sub)
+        # Back/Reset
+        if st.button("⬅️ Start Over"):
+            reset_chat()
+            st.rerun()
+
+        cols = st.columns(2)
+        for i, sub in enumerate(sorted(subcats.keys())):
+            if cols[i%2].button(sub, key=f"btn_sub_{i}"):
+                handle_selection(sub, "question", next_data=cat)
                 st.rerun()
 
-    # -------------------------------------------------------------------------
-    # 3. Question Menu
-    # -------------------------------------------------------------------------
-    elif step == "questions":
-        cat = st.session_state.selected_category
-        sub = st.session_state.selected_subcategory
+    elif opt_type == "question":
+        cat = st.session_state.current_options.get("cat")
+        sub = st.session_state.current_options.get("sub")
+        questions = data_tree.get(cat, {}).get(sub, [])
         
-        # Navigation
-        if st.button(f"⬅️ Back to {cat}", key="back_sub"):
-            go_back()
+        if st.button("⬅️ Start Over"):
+            reset_chat()
             st.rerun()
             
-        st.markdown(f"### {cat} > {sub}")
-        st.write("Select a question:")
-        st.write("---")
-
-        questions = data_tree.get(cat, {}).get(sub, [])
         for i, item in enumerate(questions):
-            if st.button(f"❓ {item['q']}", key=f"q_{i}"):
-                go_answer(item)
+            if st.button(item['q'], key=f"btn_q_{i}"):
+                handle_selection(item['q'], "answer", next_data=item)
                 st.rerun()
 
-    # -------------------------------------------------------------------------
-    # 4. Answer Display
-    # -------------------------------------------------------------------------
-    elif step == "answer":
-        item = st.session_state.selected_item
-        cat = st.session_state.selected_category
-        sub = st.session_state.selected_subcategory
-        
-        st.caption(f"{cat} > {sub}")
-        st.markdown(f"### {item['q']}")
-        
-        formatted_ans = item['a'].replace("\n", "<br>")
-        
-        st.markdown(
-            f"""
-            <div class="answer-box">
-                {formatted_ans}
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
-        
-        st.write("")
-        st.write("")
-        
-        c1, c2 = st.columns(2)
-        with c1:
-            if st.button("⬅️ Back to Questions", key="back_ans"):
-                go_back()
-                st.rerun()
-        with c2:
-            if st.button("🏠 Home", key="home_ans"):
-                go_home()
-                st.rerun()
+    elif opt_type == "reset":
+        if st.button("🔄 Start New Conversation"):
+            reset_chat()
+            st.rerun()
 
 if __name__ == "__main__":
     main()
