@@ -16,71 +16,71 @@ st.set_page_config(
 
 # --- Theme Injection ---
 def inject_theme():
-    # Futuristic Light Theme + Chat Bubbles
+    # Widget Card Theme (White/Blue) - Adjusted for FAQ Browser
     css = r"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
     
     header { visibility: hidden !important; }
     
     :root {
-        --bg-main: #F8F9FF;
+        --bg-main: #F4F6F8;
+        --widget-bg: #FFFFFF;
         --text-main: #1A1A2E;
+        --text-light: #6B7280;
         --accent: #00D4FF;
-        --user-bubble: #00D4FF;
-        --bot-bubble: #FFFFFF;
+        --border-color: #E6E8EB;
     }
     
     .stApp {
         background-color: var(--bg-main) !important;
+        font-family: 'Outfit', sans-serif !important;
         color: var(--text-main) !important;
-        font-family: 'Inter', sans-serif !important;
     }
     
-    /* Buttons (Options) */
+    /* Widget Card Simulation */
+    .block-container {
+        background-color: var(--widget-bg);
+        max-width: 450px !important;
+        margin: 2rem auto;
+        padding: 2rem !important;
+        border-radius: 16px;
+        /* Blue Glow Shadow */
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.15), 0 0 0 1px rgba(0, 212, 255, 0.1); 
+        min-height: 80vh;
+    }
+
+    /* Standard Buttons (List Items) */
     .stButton > button {
         background-color: #FFFFFF !important;
         color: var(--text-main) !important;
-        border: 1px solid var(--accent) !important;
-        border-radius: 20px !important; /* Pill shape */
-        padding: 0.5rem 1rem !important;
-        font-size: 0.9rem !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        padding: 1rem 1rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        text-align: left !important;
+        margin-bottom: 0.6rem !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
         transition: all 0.2s ease !important;
-        margin-bottom: 0.5rem !important;
-        width: 100%; /* Full width for mobile friendliness */
     }
     
     .stButton > button:hover {
-        background-color: var(--accent) !important;
-        color: #FFFFFF !important;
-        transform: translateY(-2px);
-        box-shadow: 0 0 10px rgba(0, 212, 255, 0.4) !important;
-    }
-    
-    /* Chat Bubbles */
-    .chat-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-    
-    .chat-bubble {
-        padding: 1rem 1.2rem;
-        border-radius: 16px;
-        max-width: 80%;
-        line-height: 1.5;
-        font-size: 1rem;
-        position: relative;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    
-    /* Avatar Image in Chat */
-    .stImage > img {
-        border-radius: 50%;
+        border-color: var(--accent) !important;
+        color: var(--accent) !important;
+        background-color: #F8FDFF !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15) !important;
     }
 
+    /* Blue Icon Styling Helper */
+    /* Since we can't style emojis easily, we use a span in markdown or just use a specific character like ➤ */
+    
+    /* ... rest of CSS ... */
+    
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -107,134 +107,127 @@ def load_faq_data():
     except: return {}
 
 # --- State Management ---
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Hi there! 👋 I'm Pumpui, your FIT Assistant.\n\nHow can I help you today?"}
-    ]
-if "current_options" not in st.session_state:
-    st.session_state.current_options = {"type": "category"} 
+if "view" not in st.session_state:
+    st.session_state.view = "home" # home, subcategory, question_list, article
+if "context" not in st.session_state:
+    st.session_state.context = {} # stores 'cat', 'sub', 'q_item'
 
-# Helper to append user msg and bot response
-def handle_selection(label, next_type, next_data=None, cat=None, sub=None):
-    # 1. User message
-    st.session_state.messages.append({"role": "user", "content": label})
+def navigate(view_name, **kwargs):
+    st.session_state.view = view_name
+    for k, v in kwargs.items():
+        st.session_state.context[k] = v
+
+def go_back():
+    current = st.session_state.view
+    if current == "article":
+        navigate("question_list")
+    elif current == "question_list":
+        navigate("subcategory")
+    elif current == "subcategory":
+        navigate("home")
+
+# --- Views ---
+def render_header(title, subtitle=None, show_back=False):
+    if show_back:
+        if st.button("⬅ Back", key="nav_back"):
+            go_back()
+            st.rerun()
+            
+    st.markdown(f"### {title}")
+    if subtitle:
+        st.markdown(f"<div class='subtitle'>{subtitle}</div>", unsafe_allow_html=True)
+    st.write("") # spacer
+
+# Helper for Blue Icon
+def icon(label):
+    return f"🔹 {label}"
+
+def render_home(data_tree):
+    # Header
+    c_logo, c_text = st.columns([1, 5])
+    with c_logo:
+        if ASSETS_PATH.exists():
+            st.image(str(ASSETS_PATH), width=80)
+        else:
+            st.write("🤖")
+    with c_text:
+        st.markdown("### FIT Support")
+        st.markdown("<div class='subtitle'>How can we help you today?</div>", unsafe_allow_html=True)
+
+    st.write("---")
     
-    # 2. Logic for next step
-    if next_type == "subcategory":
-        st.session_state.messages.append({"role": "assistant", "content": f"Sure, what about **{label}**?"})
-        st.session_state.current_options = {"type": "subcategory", "data": label}
-        
-    elif next_type == "question":
-        st.session_state.messages.append({"role": "assistant", "content": "Please select a specific question:"})
-        st.session_state.current_options = {"type": "question", "cat": next_data, "sub": label}
-        
-    elif next_type == "answer":
-        # Find answer
-        ans = next_data['a'].replace("\n", "\n\n")
-        st.session_state.messages.append({"role": "assistant", "content": ans})
-        
-        # Recursive Suggestions: Show other questions in the same subcategory
-        st.session_state.messages.append({"role": "assistant", "content": "Here are other related questions:"})
-        st.session_state.current_options = {"type": "recursive", "cat": cat, "sub": sub}
+    # Categories
+    cats = sorted(data_tree.keys())
+    for i, cat in enumerate(cats):
+        if st.button(f"🔹 {cat}", key=f"home_cat_{i}"):
+            navigate("subcategory", cat=cat)
+            st.rerun()
 
-def reset_chat():
-    st.session_state.messages.append({"role": "assistant", "content": "Sure, let's go back to the Main Menu. What topic would you like to explore?"})
-    st.session_state.current_options = {"type": "category"}
+def render_subcategory(data_tree):
+    cat = st.session_state.context.get("cat")
+    render_header(title=cat, subtitle="Select a topic", show_back=True)
+    
+    subcats = data_tree.get(cat, {})
+    for i, sub in enumerate(sorted(subcats.keys())):
+        if st.button(f"🔹 {sub}", key=f"sub_{i}"):
+            navigate("question_list", sub=sub)
+            st.rerun()
+
+def render_question_list(data_tree):
+    cat = st.session_state.context.get("cat")
+    sub = st.session_state.context.get("sub")
+    render_header(title=sub, subtitle=f"In {cat}", show_back=True)
+    
+    questions = data_tree.get(cat, {}).get(sub, [])
+    for i, item in enumerate(questions):
+        if st.button(f"📄 {item['q']}", key=f"q_{i}"):
+            navigate("article", q_item=item)
+            st.rerun()
+
+def render_article(data_tree):
+    cat = st.session_state.context.get("cat")
+    sub = st.session_state.context.get("sub")
+    item = st.session_state.context.get("q_item")
+    
+    render_header(title=item['q'], show_back=True)
+    
+    # Answer Content
+    ans_html = item['a'].replace("\n", "<br>")
+    st.markdown(f"<div class='article-box'>{ans_html}</div>", unsafe_allow_html=True)
+    
+    # Related Articles
+    st.markdown("#### Related Articles")
+    questions = data_tree.get(cat, {}).get(sub, [])
+    related = [q for q in questions if q['q'] != item['q']]
+    
+    if not related:
+        st.caption("No related articles found.")
+        
+    for i, r_item in enumerate(related):
+        if st.button(r_item['q'], key=f"rel_{i}"):
+            navigate("article", q_item=r_item)
+            st.rerun()
+            
+    st.write("---")
+    if st.button("🏠 Home", key="art_home"):
+        navigate("home")
+        st.rerun()
 
 # --- Main App ---
 def main():
     inject_theme()
     data_tree = load_faq_data()
     
-    # 1. Render History
-    for msg in st.session_state.messages:
-        role = msg["role"]
-        content = msg["content"]
-        
-        if role == "assistant":
-            # Bot Bubble
-            if ASSETS_PATH.exists():
-                with st.chat_message("assistant", avatar=str(ASSETS_PATH)):
-                    st.markdown(content)
-            else:
-                 with st.chat_message("assistant"):
-                    st.markdown(content)
-        else:
-            # User Bubble
-            with st.chat_message("user"):
-                st.markdown(content)
-
-    # 2. Render Options (Buttons) at bottom
-    st.write("---")
+    view = st.session_state.view
     
-    opt_type = st.session_state.current_options.get("type")
-    
-    if opt_type == "category":
-        cats = sorted(data_tree.keys())
-        cols = st.columns(2)
-        for i, cat in enumerate(cats):
-            if cols[i%2].button(cat, key=f"btn_cat_{i}"):
-                handle_selection(cat, "subcategory")
-                st.rerun()
-
-    elif opt_type == "subcategory":
-        cat = st.session_state.current_options.get("data")
-        subcats = data_tree.get(cat, {})
-        
-        if st.button("⬅️ Category"):
-            reset_chat()
-            st.rerun()
-
-        cols = st.columns(2)
-        for i, sub in enumerate(sorted(subcats.keys())):
-            if cols[i%2].button(sub, key=f"btn_sub_{i}"):
-                handle_selection(sub, "question", next_data=cat)
-                st.rerun()
-
-    elif opt_type == "question":
-        cat = st.session_state.current_options.get("cat")
-        sub = st.session_state.current_options.get("sub")
-        questions = data_tree.get(cat, {}).get(sub, [])
-        
-        if st.button("⬅️ Back"):
-            # Go back to subcategory selection
-            st.session_state.current_options = {"type": "subcategory", "data": cat}
-            st.rerun()
-            
-        for i, item in enumerate(questions):
-            if st.button(item['q'], key=f"btn_q_{i}"):
-                handle_selection(item['q'], "answer", next_data=item, cat=cat, sub=sub)
-                st.rerun()
-
-    elif opt_type == "recursive":
-        cat = st.session_state.current_options.get("cat")
-        sub = st.session_state.current_options.get("sub")
-        questions = data_tree.get(cat, {}).get(sub, [])
-
-        # Smart Reset at the TOP or BOTTOM? 
-        # User requested "Smart Reset at the bottom". 
-        
-        # Display sibling questions
-        for i, item in enumerate(questions):
-            # We use a different key prefix 'rec_' to avoid conflict
-            if st.button(item['q'], key=f"rec_btn_q_{i}"):
-                handle_selection(item['q'], "answer", next_data=item, cat=cat, sub=sub)
-                st.rerun()
-
-
-        # Divider
-        st.markdown("---")
-        st.caption("Or switch to a new topic:")
-        
-        cats = sorted(data_tree.keys())
-        cols_cat = st.columns(2)
-        for i, c in enumerate(cats):
-            # distinct key for these recursive category buttons
-            if cols_cat[i%2].button(f"📂 {c}", key=f"rec_cat_{i}"):
-                # We treat this as starting a new topic, but keeping history?
-                # Or just append to history. Let's append.
-                handle_selection(c, "subcategory")
-                st.rerun()
+    if view == "home":
+        render_home(data_tree)
+    elif view == "subcategory":
+        render_subcategory(data_tree)
+    elif view == "question_list":
+        render_question_list(data_tree)
+    elif view == "article":
+        render_article(data_tree)
 
 if __name__ == "__main__":
     main()
