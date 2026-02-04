@@ -41,20 +41,15 @@ def inject_theme():
         color: var(--text-main) !important;
     }
     
-    /* Widget Card Simulation */
+    /* Widget Card Simulation - REMOVED for Embed Cleanliness */
     .block-container {
-        background-color: var(--widget-bg);
-        max-width: 450px !important;
-        /* Height constrained logic would be controlled by iframe size usually, 
-           but here we ensure consistent spacing inside. */
-        margin: 2rem auto;
-        padding: 20px !important;
-        border-radius: 16px;
-        
-        /* Symmetric Glow Border */
-        box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
-        border: 1px solid rgba(0, 212, 255, 0.3);
-        min-height: 80vh;
+        /* background-color: transparent !important; */
+        max-width: 100% !important;
+        margin: 0 auto;
+        padding: 1rem !important;
+        /* No internal border/shadow since the iframe provides the frame */
+        box-shadow: none !important;
+        border: none !important;
     }
 
     /* Standard Buttons (List Items) */
@@ -146,6 +141,27 @@ def inject_theme():
         border-bottom: 1px solid var(--border-color);
     }
     
+    /* Text Link Buttons (Related Questions - mapped to type='primary') */
+    .stButton > button[kind="primary"] {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: var(--accent) !important;
+        text-align: left !important;
+        padding: 0 !important;
+        height: auto !important;
+        justify-content: flex-start !important;
+        margin-bottom: 0.5rem !important;
+        font-weight: 500 !important;
+    }
+    .stButton > button[kind="primary"]:hover {
+        text-decoration: underline !important;
+        background: transparent !important;
+        color: var(--accent) !important;
+        box-shadow: none !important;
+        transform: translate(2px, 0) !important;
+    }
+
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
@@ -260,16 +276,17 @@ def render_article(data_tree):
     ans_html = item['a'].replace("\n", "<br>")
     st.markdown(f"<div class='article-box'>{ans_html}</div>", unsafe_allow_html=True)
     
-    # Related Articles
-    st.markdown("#### Related Articles")
+    # Related Questions
+    st.markdown("#### Related Questions")
     questions = data_tree.get(cat, {}).get(sub, [])
     related = [q for q in questions if q['q'] != item['q']]
     
     if not related:
-        st.caption("No related articles found.")
+        st.caption("No related questions found.")
         
     for i, r_item in enumerate(related):
-        if st.button(r_item['q'], key=f"rel_{i}"):
+        # type="primary" triggers our custom text-only CSS
+        if st.button(f"➤ {r_item['q']}", key=f"rel_{i}", type="primary"):
             navigate("article", q_item=r_item)
             st.rerun()
             
