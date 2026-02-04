@@ -21,7 +21,10 @@ def inject_theme():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
     
+    /* Hide Streamlit elements */
     header { visibility: hidden !important; }
+    footer { visibility: hidden !important; }
+    #MainMenu { visibility: hidden !important; }
     
     :root {
         --bg-main: #F4F6F8;
@@ -42,11 +45,15 @@ def inject_theme():
     .block-container {
         background-color: var(--widget-bg);
         max-width: 450px !important;
+        /* Height constrained logic would be controlled by iframe size usually, 
+           but here we ensure consistent spacing inside. */
         margin: 2rem auto;
-        padding: 2rem !important;
+        padding: 20px !important;
         border-radius: 16px;
-        /* Blue Glow Shadow */
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.15), 0 0 0 1px rgba(0, 212, 255, 0.1); 
+        
+        /* Symmetric Glow Border */
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        border: 1px solid rgba(0, 212, 255, 0.3);
         min-height: 80vh;
     }
 
@@ -56,16 +63,24 @@ def inject_theme():
         color: var(--text-main) !important;
         border: 1px solid var(--border-color) !important;
         border-radius: 8px !important;
-        padding: 1rem 1rem !important;
+        
+        /* Exact height and center text */
+        height: 50px !important; 
+        padding: 0 1rem !important; /* Vertical centered by flex/height */
+        
         font-size: 0.95rem !important;
         font-weight: 500 !important;
         width: 100% !important;
+        
         display: flex !important;
-        justify-content: flex-start !important;
-        text-align: left !important;
+        align-items: center !important;
+        justify-content: center !important; /* Centered Text */
+        
         margin-bottom: 0.6rem !important;
         box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
-        transition: all 0.2s ease !important;
+        
+        /* Smooth Breathing Animation */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     
     .stButton > button:hover {
@@ -73,13 +88,63 @@ def inject_theme():
         color: var(--accent) !important;
         background-color: #F8FDFF !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15) !important;
+        
+        /* Stronger Neon Glow */
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.6) !important;
     }
 
-    /* Blue Icon Styling Helper */
-    /* Since we can't style emojis easily, we use a span in markdown or just use a specific character like ➤ */
+    /* Back Button Styling (Small top nav) */
+    .back-btn > button {
+        border: none !important;
+        background: transparent !important;
+        color: var(--text-light) !important;
+        padding: 0 !important;
+        font-size: 0.9rem !important;
+        box-shadow: none !important;
+        width: auto !important;
+        display: inline-block !important;
+        height: auto !important;
+        justify-content: flex-start !important;
+    }
+    .back-btn > button:hover {
+        color: var(--accent) !important;
+        transform: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 { 
+        color: var(--text-main) !important; 
+        margin-bottom: 0.5rem;
+    }
+    p, span, div { 
+        color: var(--text-main); 
+        line-height: 1.5;
+    }
+    .subtitle {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
     
-    /* ... rest of CSS ... */
+    /* Modern Chat Bubble (Answer Card) */
+    .article-box {
+        background-color: rgba(255, 255, 255, 0.8); /* 80% opacity */
+        backdrop-filter: blur(10px);
+        
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        
+        /* Thin Electric Blue Line Only Left with Glow */
+        border-left: 3px solid #00D4FF;
+        box-shadow: -4px 0 10px rgba(0, 212, 255, 0.15); /* Glow hint on left */
+        
+        border-top: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+    }
     
     </style>
     """
