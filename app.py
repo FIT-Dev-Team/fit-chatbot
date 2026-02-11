@@ -26,101 +26,104 @@ def inject_theme():
     footer { visibility: hidden !important; }
     #MainMenu { visibility: hidden !important; }
     
-    :root {
-        --bg-main: #FFFFFF;
-        --widget-bg: #FFFFFF;
-        --text-main: #1A1A2E;
-        --text-light: #6B7280;
-        --accent: #00D4FF;
-        --border-color: #E6E8EB;
-    }
-    
-    .stApp {
-        background: linear-gradient(180deg, #00D4FF 0%, #FFFFFF 35%) !important;
-        background-attachment: fixed !important;
-        font-family: 'Outfit', sans-serif !important;
-        color: var(--text-main) !important;
-    }
-    
-    /* Widget Card Simulation - REMOVED for Embed Cleanliness */
-    .block-container {
-        max-width: 550px !important;
-        padding-top: 2rem !important;
-        padding-bottom: 5rem !important;
-    }
+    		:root {
+			--bg-main: #FFFFFF;
+			--widget-bg: #FFFFFF;
+			--text-main: #1A1A2E;
+			--text-light: #6B7280;
+			--accent: #00D4FF;
+			--border-color: #E6E8EB;
+		}
+		
+		.stApp {
+			background-color: #F8F9FA !important; /* Solid Light Grey */
+            background-image: none !important;
+			font-family: 'Outfit', sans-serif !important;
+			color: var(--text-main) !important;
+		}
+		
+		/* Remove Streamlit's default top padding to make it look like a clean app */
+		.block-container {
+			max-width: 550px !important;
+			padding-top: 2rem !important;
+			padding-bottom: 5rem !important;
+		}
 
-    /* Standard Buttons (List Items) */
-    .stButton > button {
-        background-color: #FFFFFF !important;
-        color: var(--text-main) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 8px !important;
-        
-        /* Exact height and center text */
-        height: 50px !important; 
-        padding: 0 1rem !important; /* Vertical centered by flex/height */
-        
-        font-size: 0.95rem !important;
-        font-weight: 500 !important;
-        /* width: 100% !important;  <-- REMOVED to allow content width */
-        
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important; /* Left Aligned Text */
-        
-        margin-bottom: 0.6rem !important;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
-        
-        /* Smooth Breathing Animation */
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-    
-    .stButton > button:hover {
-        border-color: var(--accent) !important;
-        color: var(--accent) !important;
-        background-color: #F8FDFF !important;
-        transform: translateY(-1px);
-        
-        /* Stronger Neon Glow */
-        box-shadow: 0 0 20px rgba(0, 212, 255, 0.6) !important;
-    }
+        /* Widget Card Simulation - REMOVED for Embed Cleanliness */
+        /* .block-container constraints moved up */
 
-    /* Back Button Styling (Small top nav) */
-    .back-btn > button {
-        border: none !important;
-        background: transparent !important;
-        color: white !important; /* White back button on gradient */
-        padding: 0 !important;
-        font-size: 0.9rem !important;
-        box-shadow: none !important;
-        width: auto !important;
-        display: inline-block !important;
-        height: auto !important;
-        justify-content: flex-start !important;
-    }
-    .back-btn > button:hover {
-        color: #E0F7FF !important;
-        transform: none !important;
-        background: transparent !important;
-        box-shadow: none !important;
-    }
+        /* Standard Buttons (List Items) */
+        .stButton > button {
+            background-color: #FFFFFF !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            
+            /* Exact height and center text */
+            height: 50px !important; 
+            padding: 0 1rem !important; /* Vertical centered by flex/height */
+            
+            font-size: 0.95rem !important;
+            font-weight: 500 !important;
+            /* width: 100% !important;  <-- REMOVED to allow content width */
+            
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important; /* Left Aligned Text */
+            
+            margin-bottom: 0.6rem !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+            
+            /* Smooth Breathing Animation */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        
+        .stButton > button:hover {
+            border-color: var(--accent) !important;
+            color: var(--accent) !important;
+            background-color: #FFFFFF !important;
+            transform: translateY(-1px);
+            
+            /* Stronger Neon Glow */
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.3) !important;
+        }
 
-    /* Typography */
-    h1, h2, h3, h4 { 
-        color: white !important; /* White headers for contrast on blue */
-        margin-bottom: 0.5rem;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    p, span, div { 
-        color: var(--text-main); 
-        line-height: 1.5;
-    }
-    .subtitle {
-        color: rgba(255,255,255, 0.9) !important;
-        font-size: 1.1rem; /* Slightly larger */
-        margin-bottom: 1.5rem;
-        font-weight: 500;
-    }
+        /* Back Button Styling (Small top nav) */
+        .back-btn > button {
+            border: none !important;
+            background: transparent !important;
+            color: var(--text-light) !important; /* Grey back button on light bg */
+            padding: 0 !important;
+            font-size: 0.9rem !important;
+            box-shadow: none !important;
+            width: auto !important;
+            display: inline-block !important;
+            height: auto !important;
+            justify-content: flex-start !important;
+        }
+        .back-btn > button:hover {
+            color: var(--accent) !important;
+            transform: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { 
+            color: var(--text-main) !important; /* Black headers */
+            margin-bottom: 0.5rem;
+            /* text-shadow removed */
+        }
+        p, span, div { 
+            color: var(--text-main); 
+            line-height: 1.5;
+        }
+        .subtitle {
+            color: var(--text-light) !important; /* Grey subtitle */
+            font-size: 1.1rem; /* Slightly larger */
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
     
     /* Modern Chat Bubble (Answer Card) */
     .article-box {
@@ -228,7 +231,7 @@ def icon(label):
 def render_home(data_tree):
     # Header
     # Header (No Logo)
-    st.markdown("<h3 style='color: #FFFFFF !important; margin-bottom: 0px; text-shadow: 0 1px 2px rgba(0,0,0,0.1);'>FIT Support</h3>", unsafe_allow_html=True)
+    st.markdown("### FIT Support")
     st.markdown("<div class='subtitle'>How can we help you today?</div>", unsafe_allow_html=True)
 
     st.write("---")
