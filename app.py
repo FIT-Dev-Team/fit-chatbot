@@ -45,7 +45,7 @@ def inject_theme():
 		/* Remove Streamlit's default top padding to make it look like a clean app */
 		.block-container {
 			max-width: 550px !important;
-			padding-top: 2rem !important;
+			padding-top: 1.5rem !important; /* Reduced from 2rem */
 			padding-bottom: 5rem !important;
 		}
 
@@ -121,7 +121,7 @@ def inject_theme():
         .subtitle {
             color: var(--text-light) !important; /* Grey subtitle */
             font-size: 1.1rem; /* Slightly larger */
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.8rem; /* Reduced from 1.5rem */
             font-weight: 500;
         }
     
@@ -231,10 +231,11 @@ def icon(label):
 def render_home(data_tree):
     # Header
     # Header (No Logo)
-    st.markdown("### FIT Support")
+    st.markdown("<h3 style='margin-bottom: 0px;'>FIT Support</h3>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle'>How can we help you today?</div>", unsafe_allow_html=True)
 
-    st.write("---")
+    # st.write("---")  <-- Replaced with tighter HTML hr
+    st.markdown("<hr style='margin: 0.5rem 0 1.5rem 0; border: none; border-top: 1px solid #E6E8EB;'>", unsafe_allow_html=True)
     
     # Categories
     cats = sorted(data_tree.keys())
