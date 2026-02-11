@@ -1,37 +1,182 @@
 Category,Subcategory,Question,Answer
-🆘 Support & Pricing,Pricing & Payment,Does the FIT pricing include VAT?,"Package prices don’t include VAT or tax. Because we’re based in Thailand, VAT and tax apply only to Thai companies. If you’re overseas, you won’t be charged VAT or tax."
-🆘 Support & Pricing,Pricing & Payment,What is the Price of FIT?,The price of the FIT system is based on your specific requirements and the number of recording points and kitchens. Please contact us to get a personalized quote and more information about pricing options.
-🆘 Support & Pricing,Support & Contact,Can I contact someone for help?,Sure! You can reach our team or fit@lightblueconsulting.com. We'll be happy to assist you with technical issues or data questions.
-🆘 Support & Pricing,Support & Contact,How can I contact support?,"We have a dedicated support team, and you’re welcome to contact any member anytime if you need assistance.
+🆘 Support,Support & Contact,Can I contact someone for help?,Sure! You can reach our team or fit@lightblueconsulting.com. We'll be happy to assist you with technical issues or data questions.
+🆘 Support,Support & Contact,How can I contact support?,"We have a dedicated support team, and you’re welcome to contact any member anytime if you need assistance.
 If you’re not sure who to ask, please reach out to fit@lightblueconsulting.com."
-🆘 Support & Pricing,Support & Contact,How does FIT support our sustainability goals?,"By reducing food waste, FIT supports sustainability objectives, lowers carbon footprint, and provides data for reporting progress to stakeholders. It also aligns with UN Sustainable Development Goals 2, 12, and 13."
-🆘 Support & Pricing,Support & Contact,What support do you provide after setup?,"We’re here for you with ongoing support, check‑ins, and guidance — helping you succeed not just with the tech, but with the behavior changes that make a real difference"
-💻 Web App,Data Management,How do I add cover data?,"Go to 'Add Data' > 'Add Covers', select date, kitchen, shift, and enter number of covers, then click 'Save'."
-💻 Web App,Data Management,How do I edit a data entry?,"Open the relevant 'Add Data' section, locate the entry, make corrections, and save."
-💻 Web App,Reports,How can I export my data?,"Select the desired time period in either ""daily"" ""weekly"" or ""monthly"" form. Use the dashboard 'Download' button and choose the desired format to export data."
-💻 Web App,Reports,How can I get a monthly report?,"Go to the dashboard --> under show press ""monthly"" --> select the desired time period and press search, then press download to generated a report of the time period "
-💻 Web App,Reports,How can I get a weekly report?,"Go to the dashboard --> under show press ""daily"" --> select the desired time period and press search, then press download to generated a report of the time period "
-💻 Web App,Troubleshooting,Why is my data consistency low?,"Common causes include missing food waste or covers during a particular shift.
-Please make sure all required fields are filled and that data is recorded daily.
-You can check your On Demand section to see which inputs are missing."
-💻 Web App,Troubleshooting,Why is my data not showing on the dashboard?,"Please check your filters (date range, show period, kitchen) and confirm the data was applied correctly.
-If everything looks fine, open On Demand to see if food waste or covers are missing."
-💻 Web App,Usage & Frequency,Can the system work offline?,"Yes, the app has offline functionality. Data will sync automatically when the device reconnects to the internet."
-💻 Web App,Usage & Frequency,How can I check the data inputted from my kitchen?,"Go to ""on demand"" and select the specific kitchen (in the case there are multiple kitchens) and then select the time period, then press on the specific input to have the dropdown detials "
-💻 Web App,Usage & Frequency,How much time does the system take daily?,"It only takes a few minutes per shift (each record just a few seconds), and most kitchens build it into their routine without disrupting operations."
-💻 Web App,Usage & Frequency,How often should I log food waste?,"Ideally, logging should be done during or immediately after each shift, while details are fresh. Consistent logging ensures your reports are much more accurate."
-💻 Web App,Usage & Frequency,What happens if a team member enters the wrong data?,Mistakes happen! You can edit entries in the Add Data section on the FIT website. Then go to History and update the record to ensure the data points are accurate.
-📊 Analytics & Methodology,Baseline,How is the baseline calculated?,"Food waste is measured over a defined period to establish an average that reflects normal operations across shifts, categories, and waste types. This average becomes the baseline for comparison."
-📊 Analytics & Methodology,Baseline,How is the baseline used?,"Once the baseline is established, future performance (post-baseline) is compared to measure improvement or savings."
-📊 Analytics & Methodology,Baseline,What does post-baseline mean?,Post-baseline refers to the time after implementing waste-reduction actions. The system automatically compares it to baseline data to calculate progress.
-📊 Analytics & Methodology,Baseline,What is 'Baseline vs Post-Baseline' in the report?,Baseline shows your starting point before intervention; Post-Baseline shows the period after actions. The comparison demonstrates improvement over time.
-📊 Analytics & Methodology,Baseline,What is the baseline period?,The baseline is your reference period before starting any waste-reduction actions. It defines your 'normal' waste pattern and allows for future comparisons.
-📊 Analytics & Methodology,Baseline,What is the baseline?,The baseline is simply your starting point — the first measurement of food waste before changes are made. It’s what you’ll compare against later to see how effective your reduction efforts are.
-📊 Analytics & Methodology,Data Consistency,How can I improve my data consistency?,"Record data daily, ensure covers are entered correctly, and avoid leaving shifts incomplete. Regular habits lead to consistent, trustworthy data."
-📊 Analytics & Methodology,Data Consistency,What is data consistency?,"Data consistency refers to the reliability of recorded waste data. Accurate, complete, and regular entries are essential to generate valid insights and support effective decision‑making."
-📊 Analytics & Methodology,Metrics & Definitions,What does a low food waste per cover mean?,"A lower food waste per cover means you waste less food per guest served - indicating efficient portioning, menu planning, and staff awareness."
-📊 Analytics & Methodology,Metrics & Definitions,"What is food waste per cover (g/cover), and why do we use it?","Food waste per cover (g/cover) measures the amount of waste generated per guest. It is a key KPI because it normalizes for volume, allowing kitchens of different sizes to compare efficiency"
-📊 Analytics & Methodology,Metrics & Definitions,What is food waste per cover?,"Food waste per cover is calculated as total food waste (kg) divided by total covers (guests). It represents the amount of waste per guest — the lower the number, the better."
+🆘 Support,Support & Contact,How does FIT support our sustainability goals?,"By reducing food waste, FIT supports sustainability objectives, lowers carbon footprint, and provides data for reporting progress to stakeholders. It also aligns with UN Sustainable Development Goals 2, 12, and 13."
+🆘 Support,Support & Contact,What support do you provide after setup?,"We’re here for you with ongoing support, check‑ins, and guidance — helping you succeed not just with the tech, but with the behavior changes that make a real difference"
+💻 Web App,Dashboard,What is the Dashboard for?,"The Dashboard gives you an overview of your food waste performance, including your baseline, daily progress, and savings."
+💻 Web App,Dashboard,Why is my Dashboard empty?,Don’t worry! A blank Dashboard is normal during setup. It will show data once your baseline is set for your kitchen.
+💻 Web App,Dashboard,What if some data is missing when calculating the baseline?,"If data is missing (e.g., number of covers for a shift), the system will exclude that shift and calculate the baseline using the available data."
+💻 Web App,Dashboard,What are the two main indicators in the baseline?,The two main indicators are food waste per cover (grams) and average daily food waste (kilograms).
+💻 Web App,Dashboard,How do I know if my food waste is improving?,"The Dashboard shows your daily food waste per cover compared to your baseline. If the numbers are lower, you’re improving!"
+💻 Web App,Dashboard,What does 'Daily g/cover Over Baseline' mean?,It means the amount of food waste per cover that is higher than your baseline. This helps you identify days with more waste than usual.
+💻 Web App,Dashboard,What does 'Daily g/cover Under Baseline' mean?,It means the amount of food waste per cover that is lower than your baseline. This shows your progress in reducing waste.
+💻 Web App,Dashboard,Can I customize what I see on the Dashboard?,"Yes! You can filter results by outlet and choose a daily, weekly, or monthly view. You can also select your preferred date range."
+💻 Web App,Dashboard,How do I filter data by kitchen?,Use the filter options on the Dashboard to select the specific kitchen you want to view.
+💻 Web App,Dashboard,How can I see where food waste is coming from?,"The Dashboard provides a per-category analysis (e.g., Spoilage, Preparation, Buffet, Plate) to help you understand the sources of food waste."
+💻 Web App,Dashboard,Can I see which shifts generate the most waste?,Yes! The Dashboard includes a per-shift analysis to show you when food waste is highest.
+💻 Web App,Dashboard,How do I know which kitchen generates the most food waste?,The Dashboard includes a per-recording point analysis to help you identify which area has the highest food waste.
+💻 Web App,Dashboard,What should I do if my food waste numbers seem too high?,Check the per-category and per-shift analyses to identify the main sources of waste. Focus on improving those areas first.
+💻 Web App,Dashboard,How do I know if my food waste is above or below the baseline?,"The Dashboard shows your daily food waste per cover compared to your baseline. If the numbers are green, you’re under baseline; if red, you’re over."
+💻 Web App,Dashboard,What does the 'Savings Equivalent' on the Dashboard mean?,"The 'Savings Equivalent' shows how much money you’ve saved by reducing food waste, based on your cost per kg of food waste."
+💻 Web App,Dashboard,How often is the Dashboard updated?,The Dashboard is updated in real-time as you add new data.
+💻 Web App,Dashboard,Can I see the food waste data for a specific date range?,"Yes, you can select a specific date range using the filter options on the Dashboard."
+💻 Web App,Dashboard,What does the 'Overall' section in the Dashboard show?,The 'Overall' section shows your total food waste per cover and average daily food waste across all areas.
+💻 Web App,Dashboard,What is the purpose of the 'WHERE' section in the Dashboard?,It shows you the proportion of food waste by area across your sites.
+💻 Web App,Dashboard,How do I interpret the graphs on the Dashboard?,"The graphs show trends in your food waste over time. Green areas indicate improvement, while red areas show where waste is higher than the baseline."
+💻 Web App,Dashboard,What should I do if the Dashboard shows an error?,"If the Dashboard shows an error, try refreshing the page or contact support at contact@lightblueconsulting.com."
+💻 Web App,Dashboard,How do I set up my baseline for the first time?,"To set up your baseline, ensure complete data for food waste and covers over an agreed period. Our consultant will support and verify the setup."
+💻 Web App,Dashboard,What does the 'Number of Covers' mean on the Dashboard?,The 'Number of Covers' refers to the total number of meals served during a specific period.
+💻 Web App,Dashboard,How do I know if my food waste reduction efforts are working?,"If your daily food waste per cover is consistently decreasing, your reduction efforts are working!"
+💻 Web App,Dashboard,How do I reset my baseline?,"Contact your consultant. If you don't have any contact, please email to fit@lightblueconsulting.com"
+💻 Web App,Dashboard,Can I see real-time updates on the Dashboard?,"Yes, the Dashboard updates in real-time as new data is added."
+💻 Web App,Dashboard,What does the 'Cost of Food Waste' mean on the Dashboard?,"The Cost of Food Waste shows how much your food is worth.
+"
+💻 Web App,Dashboard,How do I interpret the color codes on the Dashboard?,"Green indicates improvement (under baseline), and red indicates areas needing attention (over baseline)."
+💻 Web App,Dashboard,How do I access historical data on the Dashboard?,Use the date range filter to access historical data on the Dashboard.
+💻 Web App,Dashboard,What does the 'Average Food Waste' graph show?,The 'Average Food Waste' graph shows your average daily food waste over the selected period.
+💻 Web App,Dashboard,Can I see food waste data for a specific meal type?,"Yes, you can go to Analytics, filter by shift (e.g., breakfast, lunch) to see food waste data for specific meal types."
+💻 Web App,Dashboard,How do I know if my food waste data is accurate?,Ensure all data entries are complete and accurate. You can check directly in On Demand.
+💻 Web App,Dashboard,What does the 'Total Savings' section show?,The 'Total Savings' section shows the total money saved by reducing food waste.
+💻 Web App,Dashboard,Can I customize the Dashboard layout?,"Currently, the Dashboard layout cannot be customized."
+💻 Web App,Dashboard,How do I share my Dashboard data with my team?,Use the export feature to share Dashboard data with your team.
+💻 Web App,Dashboard,What does the 'Trend Analysis' graph show?,"The 'Trend Analysis' graph shows food waste trends over time, helping you track progress."
+💻 Web App,Dashboard,What does 'Day of the Week' graph show?,"It shows your average daily food waste for each day (Mon–Sun), helping you spot which day to tackle first"
+💻 Web App,Analytics,What can I see in the Analytics section?,"Analytics helps you understand where, when, and why food waste happens. You can track waste by location, category, shift, and food type."
+💻 Web App,Analytics,How do I track food waste per category?,"In Analytics, you’ll see food waste divided into categories like Spoilage, Preparation, Buffet, and Plate."
+💻 Web App,Analytics,Can I compare my food waste to the baseline in Analytics?,"Yes! Analytics shows how your current food waste compares to your baseline, so you can track progress."
+💻 Web App,Analytics,What does the 'Food Waste per Cover' table show?,The 'Food Waste per Cover' table shows the amount of food waste per meal served.
+💻 Web App,Analytics,How do I interpret the variations in the Analytics section?,Variations show the percentage increase or decrease in food waste compared to your baseline.
+💻 Web App,Analytics,What is the purpose of the 'Total Food Waste' table?,The 'Total Food Waste' table shows the total amount of food waste in kilograms for each shift.
+💻 Web App,Analytics,Can I see food waste trends over time?,"Yes, the Analytics section provides graphs and tables to show food waste trends over time."
+💻 Web App,Analytics,How do I filter data in the Analytics section?,"Use the filter options to select the recording point, date range, and view (daily, weekly, monthly) you want."
+💻 Web App,Analytics,What does the 'Per Category Analysis' show?,"The 'Per Category Analysis' shows how much food waste comes from Spoilage, Preparation, Buffet, and Plate."
+💻 Web App,Analytics,How can I see which food category generates the most waste?,The table 'Food Waste per Cover Separated into Categories' shows which category generates the most waste.
+💻 Web App,Analytics,Can I see food waste data for a specific outlet?,"Yes, you can filter data by recording point to see food waste for a specific location."
+💻 Web App,Analytics,How do I know which shifts have the highest food waste?,The 'Per Shift'  in Analytics helps you identify shifts with the highest food waste.
+💻 Web App,Analytics,What does the 'Categories' represent?,"The category helps you understand the reason why your food waste occurs.
+"
+💻 Web App,Analytics,How do I use the Analytics section to reduce food waste?,Use Analytics to identify high-waste areas and focus your reduction efforts there.
+💻 Web App,Analytics,What does the 'Total Food Waste per shift' table show?,"This table shows the total food waste per shift, helping you track waste by time of day."
+💻 Web App,Analytics,Can I see the average food waste per category?,"Yes, the 'Food Waste per Cover Separated into Categories' table shows the average waste per category."
+💻 Web App,Analytics,How do I know if my food waste is improving in a specific category?,"If the variations are negative, your food waste in that category is decreasing compared to the baseline."
+💻 Web App,Analytics,What does the 'Variations' column in Analytics mean?,"Variations show how much your current food waste differs from the baseline, in percentage."
+💻 Web App,Analytics,Can I export data from the Analytics section?,You can download the graph from download button.
+💻 Web App,Analytics,How do I identify the main sources of food waste using Analytics?,Use the 'Per Category' in Analytics to identify the main sources of food waste.
+💻 Web App,Analytics,Can I see food waste data for a custom date range?,"Yes, use the filter options to select a custom date range for your analysis."
+💻 Web App,Analytics,How do I compare food waste between different outlets?,Filter data by 'Recording Points' to compare food waste performance between different locations.
+💻 Web App,Analytics,What does the 'Average Over Period' row show?,The 'Average Over Period' row shows the average food waste during the selected time period.
+💻 Web App,Analytics,How do I know if my food waste reduction efforts are effective?,"If your variations are mostly negative, your reduction efforts are effective!"
+💻 Web App,Analytics,Can I see food waste data by food type?,"Yes, the 'Per Food Types' in Analytics shows how much you generate food waste per type."
+💻 Web App,Analytics,What does the 'Missing Data' highlight indicate?,The 'Missing Data' highlight indicates incomplete data that needs to be filled in for accurate analysis.
+💻 Web App,Analytics,How do I use Analytics to set food waste reduction goals?,Use Analytics to identify high-waste areas and set specific reduction goals for those categories or shifts.
+💻 Web App,Analytics,What does the 'Performance vs. Baseline' graph show?,The 'Performance vs. Baseline' graph shows how your current food waste compares to your baseline over time.
+💻 Web App,Analytics,Can I see real-time food waste data in Analytics?,"Yes, Analytics provides real-time food waste data as it is updated."
+💻 Web App,Analytics,What does the 'Food Waste by Food Type' graph show?,The 'Food Waste by Food Type' graph shows which types of food generate the most waste.
+💻 Web App,Analytics,How do I use Analytics to identify waste reduction opportunities?,"Use Analytics to identify high-waste categories and shifts, then focus your reduction efforts there."
+💻 Web App,Analytics,Can I see food waste data for specific meal types?,"Yes, filter by shift (e.g., breakfast, lunch) to see food waste data for specific meal types."
+💻 Web App,Analytics,Can I see food waste trends for specific categories?,"Yes, use the category filter to see food waste trends for specific categories."
+💻 Web App,Analytics,How do I use Analytics to monitor my progress over time?,Use Analytics to track food waste trends over time and monitor your progress.
+💻 Web App,Analytics,What does the 'Food Waste by Shift' graph show?,The 'Food Waste by Shift' graph shows when food waste is highest during the day.
+💻 Web App,Analytics,What does 'Recording Points' table show?,It compares food waste performance across different locations.
+💻 Web App,Analytics,How do I use Analytics to set waste reduction goals?,Use Analytics to identify high-waste areas and set specific reduction goals for your team.
+💻 Web App,Add Data,How do I add food waste data?,"Go to 'Add Data', select 'Add Food Waste', fill in the details (date, kitchen, shift, category, weight, food type, remarks), and click 'Save Food Waste'."
+💻 Web App,Add Data,How do I add cover data?,"Go to 'Add Data', select 'Add Covers', choose the date, kitchen, and shift, enter the number of covers, and click 'Save'."
+💻 Web App,Add Data,How do I mark a shift as closed?,"Go to 'Add Data', select 'Add Closed Shifts', choose the start/end date, kitchen, and shift, then click 'Save Closed Operation'."
+💻 Web App,Add Data,Can I edit or delete data?,"Yes, go to the data, click 'History', choose what to edit or delete, make changes, and click 'Save' or confirm deletion."
+💻 Web App,Add Data,What should I do if I made a mistake in entering data?,"Go to the data entry, click 'History', modify the incorrect data, and save your changes."
+💻 Web App,Add Data,How do I add food waste for a specific kitchen or outlet?,Select the kitchen/outlet from the dropdown menu when adding food waste data.
+💻 Web App,Add Data,Can I add food waste data for past dates?,"Yes, you can select any past date when adding food waste or cover data."
+💻 Web App,Add Data,How do I know if my data has been saved successfully?,"You’ll see a confirmation message or the data will appear in your records. Also, you can check in History."
+💻 Web App,Add Data,What does the 'Add Closed Shifts' option do?,"'Add Closed Shifts' lets you mark shifts as closed for specific dates, useful for scheduled closures."
+💻 Web App,Add Data,How do I add a remark to my data entry?,"When adding food waste or cover data, there’s a remarks field where you can add additional notes."
+💻 Web App,Add Data,Can I add data for multiple shifts at once?,"Currently, you need to add data for each shift individually."
+💻 Web App,Add Data,What should I do if I forget to add cover data?,"Go to 'Add Data', select 'Add Covers', and fill in the missing cover data for the relevant shifts."
+💻 Web App,Add Data,Can I add food waste data for a future date?,"Technically, yes.  You can select any future date when adding food waste or cover data."
+💻 Web App,Add Data,How do I add data for a new outlet?,Contact your consultant if you are interested to have more kitchens in FIT.
+💻 Web App,Add Data,What does the 'No Covers Added Yet' section mean?,This section shows shifts with food waste records but missing cover data. Add the missing covers here.
+💻 Web App,Add Data,How do I add covers for a past shift?,"Go to 'Add Data', select 'Add Covers', choose the past date and shift, and enter the number of covers."
+💻 Web App,Add Data,Can I modify data after it has been saved?,"Yes, go to the data entry, click 'History', modify the data, and save your changes."
+💻 Web App,Add Data,How do I delete incorrect data entries?,"Go to the data entry, click 'History', select the incorrect entry, and click 'Delete'."
+💻 Web App,Add Data,What does the 'History' option do in the Add Data section?,The 'History' option lets you view and modify past data entries.
+💻 Web App,Add Data,How do I add data for a closed shift?,Use the 'Add Closed Shifts' option to mark a shift as 'Open' and add data on that shift.
+💻 Web App,Add Data,What should I do if the system doesn’t save my data?,"Double-check your entries and try saving again. If the issue persists, contact fit@lightblueconsulting.com."
+💻 Web App,Add Data,What does the 'Repeat' feature do in the 'Add Closed Shifts' option?,"The 'Repeat' feature lets you apply closed shifts to multiple dates at once, useful for regular closures."
+💻 Web App,Add Data,How do I add data for multiple kitchens at once?,"Currently, you need to add data for each kitchen individually."
+💻 Web App,Add Data,What does the 'Import' option in Add Data do?,The 'Import' option allows you to upload data in bulk using an Excel template.
+💻 Web App,Add Data,What should I do if I need to add historical data?,Use the 'Add Data' section to manually enter historical data for past dates.
+💻 Web App,Add Data,What does the 'Template Download' option do?,The 'Template Download' option provides a template for bulk uploading data.
+💻 Web App,On Demand,What is the On Demand section for?,On Demand lets you access and filter your data entry records. You can also export data in different formats.
+💻 Web App,On Demand,How do I filter data in the On Demand section?,"Use the filter options to select the kitchen, date range, and data type you want to view."
+💻 Web App,On Demand,Can I export data from the On Demand section?,"Yes, click the 'Export' button to download data in formats like Excel, CSV, or PDF."
+💻 Web App,On Demand,What types of data can I see in the On Demand section?,"You can see food waste, covers, and missing data for specific dates and outlets."
+💻 Web App,On Demand,How do I view detailed data for a specific entry?,Click 'Expand Details' next to any entry to see more information.
+💻 Web App,On Demand,Can I see missing data in the On Demand section?,"Yes, Missing Data is highlighted directly in the table for easy visibility.
+"
+💻 Web App,On Demand,How do I know if my data is complete?,"If there are no highlights in the 'Missing Data' column, your data is complete."
+💻 Web App,On Demand,What does the 'Export' button do?,The 'Export' button lets you download the filtered data in your preferred format.
+💻 Web App,On Demand,Can I export data in different formats?,"Yes, you can export data in formats like Excel, PDF, or CSV."
+💻 Web App,On Demand,How do I filter data by date range?,Use the date range filter to select the start and end dates for the data you want to see.
+💻 Web App,On Demand,Can I see food waste data for a specific kitchen?,"Yes, use the filter options to select the specific kitchen you prefer."
+💻 Web App,On Demand,How do I use the On Demand section to track my progress?,Use the On Demand section to monitor your team on recording data over time and identify missing data.
+💻 Web App,On Demand,How do I interpret the data in the On Demand section?,"The data shows food waste, covers, and missing data for each entry. Use it to spot trends and areas for improvement."
+💻 Web App,On Demand,What should I do if I notice missing data in the On Demand section?,Go to the 'Add Data' section and fill in the missing information.
+💻 Web App,On Demand,How do I filter data by food type?,Use the filter options to select the food type you want to view.
+💻 Web App,On Demand,What does the 'Grand Total' column show?,The Grand Total column shows the total food waste for each shift per location. The Grand Total at the bottom displays the overall food waste for the selected period.
+💻 Web App,On Demand,Can I see data for a specific shift?,"Yes, use the filter options to select the specific shift you want to view."
+💻 Web App,On Demand,How do I export data for a specific date range?,"Select your desired date range using the filter options, then click 'Export'."
+💻 Web App,On Demand,How do I filter data by category?,Use the filter options to select the category you want to view.
+💻 Web App,On Demand,What should I do if the data in the On Demand section seems incorrect?,Double-check your data entries and correct any errors in the 'Add Data' section.
+💻 Web App,On Demand,Can I see historical data in the On Demand section?,"Yes, you can view historical data by selecting a past date range in the filter options."
+💻 Web App,On Demand,How do I use the On Demand section to prepare reports?,Use the export feature to download data and create custom reports in your preferred tool.
+💻 Web App,On Demand,How do I filter data by food waste category in On Demand?,Use the filter options to select the food waste category you want to view.
+💻 Web App,On Demand,Can I see real-time data in the On Demand section?,"Yes, the On Demand section provides real-time data as it is updated."
+💻 Web App,On Demand,How do I filter data by meal type in On Demand?,"Use the filter options to select the meal type (e.g., breakfast, lunch) you want to view."
+💻 Web App,On Demand,How do I use On Demand to monitor my team’s performance?,Use the On Demand section to monitor whether your team’s entries are correctly recorded.
+💻 Web App,Weekly Report,What does the Weekly Report include?,"The Weekly Report includes food waste per cover, daily total food waste, number of covers, and savings equivalent."
+💻 Web App,Weekly Report,How often will I receive the Weekly Report?,The Weekly Report is sent to your inbox every week.
+💻 Web App,Weekly Report,Can I see food waste per cover in the Weekly Report?,"Yes, the Weekly Report shows food waste per cover for each shift, category, and food type."
+💻 Web App,Weekly Report,What does the 'Performance vs. Baseline' section show?,"This section compares your current food waste to your baseline, showing your progress."
+💻 Web App,Weekly Report,How do I interpret the 'Highlights of the Week' section?,"'Highlights of the Week' shows key achievements, like reductions in food waste or cost savings."
+💻 Web App,Weekly Report,Can I see which food types generate the most waste in the Weekly Report?,"Yes, the report includes food waste data by food type, helping you identify which foods generate the most waste."
+💻 Web App,Weekly Report,What does the 'Savings of the Week' section show?,This section shows how much money you’ve saved by reducing food waste during the week.
+💻 Web App,Weekly Report,How do I know if my food waste is improving based on the Weekly Report?,"If your food waste per cover is decreasing compared to the baseline, your efforts are working!"
+💻 Web App,Weekly Report,Can I see data for a specific kitchen in the Weekly Report?,"Yes, the Weekly Report includes data for each outlet, so you can compare performance."
+💻 Web App,Weekly Report,How do I use the Weekly Report to reduce food waste?,Use the report to identify high-waste areas and focus your reduction efforts there.
+💻 Web App,Weekly Report,What does the 'Number of Covers' section show?,This section shows the total number of meals served during the week.
+💻 Web App,Weekly Report,How do I access my Weekly Report?,The Weekly Report is sent to your email every week. 
+💻 Web App,Weekly Report,Can I compare my Weekly Report to previous weeks?,"Yes, the Weekly Report includes comparisons to previous weeks, so you can track your progress."
+💻 Web App,Weekly Report,What does the 'Savings Equivalent' section show?,This section shows how much money you’ve saved by reducing food waste during the week.
+💻 Web App,Weekly Report,How do I know which shifts have the highest food waste in the Weekly Report?,"The report includes a per-shift analysis, showing which shifts have the highest food waste."
+💻 Web App,Weekly Report,Can I see food waste data by category in the Weekly Report?,"Yes, the Weekly Report includes food waste data by category, like Spoilage, Preparation, Buffet, and Plate."
+💻 Web App,Weekly Report,What should I do if I notice an error in my Weekly Report?,Contact fit@lightblueconsulting.com if you spot technical error.
+💻 Web App,Weekly Report,How do I share my Weekly Report with my team?,Forward the email or download the report and share it with your team.
+💻 Web App,Weekly Report,What does the 'Daily Number of Covers & Food Waste Quantity' table show?,This table shows the number of covers served and the amount of food waste generated each day.
+💻 Web App,Weekly Report,What does the 'Why is Food Waste Happening?' section show?,"This section shows which categories (e.g., Spoilage, Preparation) generate the most waste."
+💻 Web App,Weekly Report,How do I know if my food waste reduction efforts are working based on the Weekly Report?,"If your food waste per cover is consistently decreasing, your reduction efforts are working!"
+💻 Web App,Weekly Report,Can I see food waste data for a specific food type in the Weekly Report?,"Yes, the Weekly Report includes food waste data by food type."
+💻 Web App,Weekly Report,What does the 'When is Food Waste being Generated?' section show?,"This section shows when food waste is highest during the week, helping you identify peak waste times."
+💻 Web App,Weekly Report,Can I see a summary of my food waste performance in the Weekly Report?,"Yes, the Weekly Report provides a highlight section to summarize your week."
+💻 Web App,Weekly Report,Can I see real-time updates in the Weekly Report?,The Weekly Report provides a summary of the past week and stays up‑to‑date whenever you edit your data.
+💻 Web App,Weekly Report,How do I use the Weekly Report to prepare for a meeting?,Use the Weekly Report to prepare key metrics and trends for your meeting.
+💻 Web App,Weekly Report,What does the 'Weekly Savings' section show?,The 'Weekly Savings' section shows how much money you’ve saved by reducing food waste during the week.
+💻 Web App,Weekly Report,How do I use the Weekly Report to track my team’s performance?,Use the Weekly Report to track food waste trends and monitor your team’s performance.
+💻 Web App,Weekly Report,How do I share the Weekly Report with stakeholders?,Forward the Weekly Report email or download it and share with stakeholders.
+💻 Web App,Weekly Report,What does the 'Weekly Highlights' section show?,The 'Weekly Highlights' section shows key achievements and areas for improvement during the week.
+💻 Web App,Weekly Report,Can I see data for a specific food waste challenge in the Weekly Report?,The 'Weekly Highlights' section shows key achievements and areas for improvement during the week.
+💻 Web App,Weekly Report,What does the 'Weekly Performance' graph show?,The 'Weekly Performance' graph shows your food waste performance compared to your baseline and previous weeks.
+💻 Web App,Weekly Report,How can I change language?,Change language via the flag icon (top right).
+📊 Methodology,Baseline,How is the baseline calculated?,"Food waste is measured over a defined period to establish an average that reflects normal operations across shifts, categories, and waste types. This average becomes the baseline for comparison."
+📊 Methodology,Baseline,How is the baseline used?,"Once the baseline is established, future performance (post-baseline) is compared to measure improvement or savings."
+📊 Methodology,Baseline,What does post-baseline mean?,Post-baseline refers to the time after implementing waste-reduction actions. The system automatically compares it to baseline data to calculate progress.
+📊 Methodology,Baseline,What is 'Baseline vs Post-Baseline' in the report?,Baseline shows your starting point before intervention; Post-Baseline shows the period after actions. The comparison demonstrates improvement over time.
+📊 Methodology,Baseline,What is the baseline period?,The baseline is your reference period before starting any waste-reduction actions. It defines your 'normal' waste pattern and allows for future comparisons.
+📊 Methodology,Baseline,What is the baseline?,The baseline is simply your starting point — the first measurement of food waste before changes are made. It’s what you’ll compare against later to see how effective your reduction efforts are.
+📊 Methodology,Data Consistency,How can I improve my data consistency?,"Record data daily, ensure covers are entered correctly, and avoid leaving shifts incomplete. Regular habits lead to consistent, trustworthy data."
+📊 Methodology,Data Consistency,What is data consistency?,"Data consistency refers to the reliability of recorded waste data. Accurate, complete, and regular entries are essential to generate valid insights and support effective decision‑making."
+📊 Methodology,Metrics & Definitions,What does a low food waste per cover mean?,"A lower food waste per cover means you waste less food per guest served - indicating efficient portioning, menu planning, and staff awareness."
+📊 Methodology,Metrics & Definitions,"What is food waste per cover (g/cover), and why do we use it?","Food waste per cover (g/cover) measures the amount of waste generated per guest. It is a key KPI because it normalizes for volume, allowing kitchens of different sizes to compare efficiency"
+📊 Methodology,Metrics & Definitions,What is food waste per cover?,"Food waste per cover is calculated as total food waste (kg) divided by total covers (guests). It represents the amount of waste per guest — the lower the number, the better."
 📦 General Information,Benefits & Features,How does FIT help in reducing food waste?,"FIT helps you see where and why waste happens. With those insights, you can adjust portions, improve inventory, and optimize preparation. Continuous monitoring keeps track of progress and points the way to further improvements."
 📦 General Information,Benefits & Features,How does FIT help with staff engagement?,"FIT empowers staff to see the impact of their actions, making food waste reduction a collective effort rather than just another task."
 📦 General Information,Getting Started,How does FIT work?,All you have to do is punch in the food waste and cover data via the app. FIT takes care of the rest — calculating KPIs like food waste per cover and turning them into easy‑to‑read dashboards that help kitchens cut waste.
@@ -41,31 +186,6 @@ If everything looks fine, open On Demand to see if food waste or covers are miss
 📦 General Information,Introduction,Who are you?,"I’m Pumpui, your FIT Assistant created by LightBlue. I can help you with food waste tracking, food waste per cover, covers, shift settings, and guidance on using the FIT app."
 📦 General Information,Introduction,Who created FIT?,FIT was designed by LightBlue Consulting to help professional kitchens measure and take action on food waste reduction.
 📦 General Information,Introduction,Who uses FIT?,"FIT is suitable for commercial kitchens and is trusted by international hotel groups such as Accor, Hyatt, Marriott, and Constance, as well as restaurants and event venues worldwide."
-📦 General Information,Miscellaneous,How can I check what data is missing?,"Go to ‘On demand’, select your preferred period and kitchen. Any missing records will be highlighted in yellow."
-📦 General Information,Miscellaneous,How can I log waste in FIT?,"You can log food waste through the FIT mobile or web app by selecting the waste category, reason, and weight from the connected smart scale, or by manually entering data from your digital scale. Each entry contributes to tracking food waste trends over time."
-📦 General Information,Miscellaneous,How do I enter covers?,"Go to ‘Add covers’, select the kitchen and shift, then enter the number of guests. FIT uses this cover data to calculate food waste per cover."
-📦 General Information,Miscellaneous,How do I switch between kitchens?,Use the dropdown menu at the top of the dashboard to select a different kitchen or site.
-📦 General Information,Miscellaneous,How does FIT integrate with our current kitchen operations?,"FIT fits right into your kitchen workflow without disruption. We’ll train your staff to log waste accurately, customize the system to your needs, and keep supporting you with check‑ins, refresher sessions, and an online help desk."
-📦 General Information,Miscellaneous,How secure is the data collected by the FIT system?,FIT keeps your data safe with encryption and strict access controls. Our security is always monitored and updated to stay at the highest level.
-📦 General Information,Miscellaneous,How to categorize plate waste?,"All plate waste will be categorized as ""mixed"" for simplicity and consistency."
-📦 General Information,Miscellaneous,How to reduce plate waste?,"Our Hacks section offers a repository of practical solutions, including techniques for reducing plate waste."
-📦 General Information,Miscellaneous,What can you do?,"I can explain how to use the FIT system, answer questions about food waste data, and guide you through reporting or troubleshooting common issues."
-📦 General Information,Miscellaneous,What is LightBlue?,"LightBlue Consulting is a sustainability consulting firm based in Bangkok, Thailand. We specialize in food waste prevention, training, and technology solutions such as FIT, trusted by major hotel brands worldwide. We provide services both domestically and internationally."
-📦 General Information,Miscellaneous,What is a complete set?,"A complete set means both the mandatory food waste category and the number of covers are entered. This allows FIT to calculate food waste per cover. The more complete sets recorded, the higher the percentage of data consistency. For the production kitchen, all mandatory food waste categories must be filled during the shift."
-📦 General Information,Miscellaneous,What kind of reports does FIT generate?,"FIT provides a Dashboard to show overall impact and reduction. For more detailed insights, the Analytics section displays food waste per cover and food waste in kilograms by location, shift, and category, along with reduction progress over time, including baseline vs. post‑baseline performance. In addition, FIT users receive a weekly report to monitor impact and reduction."
-📦 General Information,Miscellaneous,What should I do if my kitchen is closed?,"In FIT, the Shift setting (mobile) or Add closed shifts (web) function is used to mark when your kitchen is not operating during a particular shift and day. This ensures the report will not appear as missing."
-📦 General Information,Miscellaneous,What should I do if the app shows missing data?,"When the system displays missing data, verify that covers and waste logs have been entered for the shift. If the entries are complete but the warning remains, please contact fit@lightblueconsulting.com for support so we can resolve the issue quickly."
-📦 General Information,Miscellaneous,What time zone does FIT use?,"Each site operates in its own configured local time zone, set during onboarding or FIT registration form since very beginning."
-📦 General Information,Miscellaneous,When do I enter covers?,"Enter the total number of covers at the end of each shift, once service is completed and the actual guests served are known."
-📦 General Information,Miscellaneous,Where can I learn more about LightBlue?,"You can visit www.lightblue.solutions to learn more about our solutions.
-
-"
-📦 General Information,Miscellaneous,Why do I need to add covers?,"Our main KPI is food waste per cover. Tracking only the average amount of food waste is not sufficient — this metric enables fair comparison across different days, sites, and service volumes. That’s why we require the number of covers."
-📦 General Information,Miscellaneous,"Why does FIT categorize by shift, category, and type?","By breaking waste down by shift, category (prep, spoilage, plate), and type (like vegetables or meat), you can see more clearly when, where, and why it happens — making it easier to focus on the right fixes"
-📦 General Information,Miscellaneous,Why is kg/day not always correlated with g/cover?,"Kg/day captures overall waste volume, whereas g/cover accounts for meals served, enabling fair benchmarking. When covers decline, kg/day may decrease while g/cover remains stable or rises. Together, these metrics provide complementary insights into both scale and efficiency"
-📦 General Information,Miscellaneous,Why is my data marked as missing?,"If covers or one of the waste categories is missing, FIT flags the set as incomplete. Please review and fill in the missing information to make it complete."
-📦 General Information,Miscellaneous,what can you do?,"Hey there! I’m Pumpui, your FIT Assistant.
-I’m here to support you with questions about FIT, from daily usage to reducing food waste in your kitchen."
 📱 Mobile App,Data Entry,How do I add covers data?,"Select a kitchen, pick a date, and enter covers for each meal type (e.g., Breakfast, Lunch, Dinner). Press 'Send' to save."
 📱 Mobile App,Data Entry,How do I add food waste data?,"Select a kitchen, choose meal type and category, select waste type, enter kilograms, then press 'Send' to save."
 📱 Mobile App,Data Entry,How do I enter backdated data?,"Enter data normally, then go to the 'History' tab and use 'edit' to change the entry date."

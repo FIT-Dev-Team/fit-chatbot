@@ -27,7 +27,7 @@ def inject_theme():
     #MainMenu { visibility: hidden !important; }
     
     :root {
-        --bg-main: #F4F6F8;
+        --bg-main: #FFFFFF;
         --widget-bg: #FFFFFF;
         --text-main: #1A1A2E;
         --text-light: #6B7280;
@@ -36,20 +36,17 @@ def inject_theme():
     }
     
     .stApp {
-        background-color: var(--bg-main) !important;
+        background: linear-gradient(180deg, #00D4FF 0%, #FFFFFF 35%) !important;
+        background-attachment: fixed !important;
         font-family: 'Outfit', sans-serif !important;
         color: var(--text-main) !important;
     }
     
     /* Widget Card Simulation - REMOVED for Embed Cleanliness */
     .block-container {
-        /* background-color: transparent !important; */
-        max-width: 100% !important;
-        margin: 0 auto;
-        padding: 1rem !important;
-        /* No internal border/shadow since the iframe provides the frame */
-        box-shadow: none !important;
-        border: none !important;
+        max-width: 550px !important;
+        padding-top: 2rem !important;
+        padding-bottom: 5rem !important;
     }
 
     /* Standard Buttons (List Items) */
@@ -65,11 +62,11 @@ def inject_theme():
         
         font-size: 0.95rem !important;
         font-weight: 500 !important;
-        width: 100% !important;
+        /* width: 100% !important;  <-- REMOVED to allow content width */
         
         display: flex !important;
         align-items: center !important;
-        justify-content: center !important; /* Centered Text */
+        justify-content: flex-start !important; /* Left Aligned Text */
         
         margin-bottom: 0.6rem !important;
         box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
@@ -92,7 +89,7 @@ def inject_theme():
     .back-btn > button {
         border: none !important;
         background: transparent !important;
-        color: var(--text-light) !important;
+        color: white !important; /* White back button on gradient */
         padding: 0 !important;
         font-size: 0.9rem !important;
         box-shadow: none !important;
@@ -102,7 +99,7 @@ def inject_theme():
         justify-content: flex-start !important;
     }
     .back-btn > button:hover {
-        color: var(--accent) !important;
+        color: #E0F7FF !important;
         transform: none !important;
         background: transparent !important;
         box-shadow: none !important;
@@ -110,22 +107,24 @@ def inject_theme():
 
     /* Typography */
     h1, h2, h3, h4 { 
-        color: var(--text-main) !important; 
+        color: white !important; /* White headers for contrast on blue */
         margin-bottom: 0.5rem;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     p, span, div { 
         color: var(--text-main); 
         line-height: 1.5;
     }
     .subtitle {
-        color: var(--text-light);
-        font-size: 0.9rem;
+        color: rgba(255,255,255, 0.9) !important;
+        font-size: 1.1rem; /* Slightly larger */
         margin-bottom: 1.5rem;
+        font-weight: 500;
     }
     
     /* Modern Chat Bubble (Answer Card) */
     .article-box {
-        background-color: rgba(255, 255, 255, 0.8); /* 80% opacity */
+        background-color: rgba(255, 255, 255, 0.95); /* Higher opacity for readability */
         backdrop-filter: blur(10px);
         
         border-radius: 12px;
@@ -134,7 +133,7 @@ def inject_theme():
         
         /* Thin Electric Blue Line Only Left with Glow */
         border-left: 3px solid #00D4FF;
-        box-shadow: -4px 0 10px rgba(0, 212, 255, 0.15); /* Glow hint on left */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Soft shadow */
         
         border-top: 1px solid var(--border-color);
         border-right: 1px solid var(--border-color);
@@ -210,9 +209,12 @@ def go_back():
 # --- Views ---
 def render_header(title, subtitle=None, show_back=False):
     if show_back:
+        # Wrap back button in a container to isolate style
+        st.markdown("<div class='back-btn'>", unsafe_allow_html=True)
         if st.button("⬅ Back", key="nav_back"):
             go_back()
             st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
             
     st.markdown(f"### {title}")
     if subtitle:
@@ -225,15 +227,9 @@ def icon(label):
 
 def render_home(data_tree):
     # Header
-    c_logo, c_text = st.columns([1, 5])
-    with c_logo:
-        if ASSETS_PATH.exists():
-            st.image(str(ASSETS_PATH), width=80)
-        else:
-            st.write("🤖")
-    with c_text:
-        st.markdown("### FIT Support")
-        st.markdown("<div class='subtitle'>How can we help you today?</div>", unsafe_allow_html=True)
+    # Header (No Logo)
+    st.markdown("### FIT Support")
+    st.markdown("<div class='subtitle'>How can we help you today?</div>", unsafe_allow_html=True)
 
     st.write("---")
     
