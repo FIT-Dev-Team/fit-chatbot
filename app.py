@@ -228,7 +228,7 @@ def icon(label):
 def render_home(data_tree):
     # Header
     # Header (No Logo)
-    st.markdown("### FIT Support")
+    st.markdown("<h3 style='color: white !important; margin-bottom: 0px;'>FIT Support</h3>", unsafe_allow_html=True)
     st.markdown("<div class='subtitle'>How can we help you today?</div>", unsafe_allow_html=True)
 
     st.write("---")
