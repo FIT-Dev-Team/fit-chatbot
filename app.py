@@ -240,18 +240,18 @@ def render_home(data_tree):
     # Categories ensuring specific order and renaming
     # Format: (CSV Key, Display Name)
     CUSTOM_ORDER = [
-        ("💻 Web App", "How to use FIT web app"),
-        ("📦 General Information", "General Information"),
-        ("📊 Methodology", "Methodology"),
-        ("📱 Mobile App", "FIT mobile app"),
-        ("🆘 Support", "Support")
+        ("💻 How to use FIT web app", "💻 How to use FIT web app"),
+        ("📦 General Information", "📦 General Information"),
+        ("📊 Methodology", "📊 Methodology"),
+        ("📱 FIT mobile app", "📱 FIT mobile app"),
+        ("🆘 Support", "🆘 Support")
     ]
     
     # 1. Render specific categories in order
     displayed_keys = set()
     for i, (key, label) in enumerate(CUSTOM_ORDER):
         if key in data_tree:
-            if st.button(f"🔹 {label}", key=f"home_cat_{i}"):
+            if st.button(label, key=f"home_cat_{i}"):
                 navigate("subcategory", cat=key)
                 st.rerun()
             displayed_keys.add(key)
@@ -260,7 +260,7 @@ def render_home(data_tree):
     other_cats = sorted([k for k in data_tree.keys() if k not in displayed_keys])
     for i, cat in enumerate(other_cats):
         # Offset key index to avoid duplicates
-        if st.button(f"🔹 {cat}", key=f"home_cat_other_{i}"):
+        if st.button(cat, key=f"home_cat_other_{i}"):
             navigate("subcategory", cat=cat)
             st.rerun()
 
