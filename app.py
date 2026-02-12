@@ -60,16 +60,19 @@ def inject_theme():
             border-radius: 8px !important;
             
             /* Exact height and center text */
-            height: 50px !important; 
-            padding: 0 1rem !important; /* Vertical centered by flex/height */
+            /* Flexible height for multi-line text */
+            height: auto !important; 
+            min-height: 50px !important;
+            padding: 0.5rem 1rem !important; /* Vertical padding for wrapped text */
             
             font-size: 0.95rem !important;
             font-weight: 500 !important;
-            /* width: 100% !important;  <-- REMOVED to allow content width */
+            width: 100% !important;  /* Ensure full width */
             
             display: flex !important;
             align-items: center !important;
             justify-content: flex-start !important; /* Left Aligned Text */
+            text-align: left !important; /* Force text alignment */
             
             margin-bottom: 0.6rem !important;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
